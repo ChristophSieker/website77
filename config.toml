@@ -197,12 +197,12 @@ disqusShortname = ""
 
     [[params.footer.social]]
       icon = "fa-facebook"
-      url= "www.facebook.com/ChristophAlexanderSieker"
+      url= "https://www.facebook.com/ChristophAlexanderSieker"
       label = "Facebook"
 
     [[params.footer.social]]
       icon = "fa-instagram"
-      url= "www.instagram.com/christoph_sieker"
+      url= "https://www.instagram.com/christoph_sieker"
       label = "Instagram"
     
     [[params.footer.social]]
