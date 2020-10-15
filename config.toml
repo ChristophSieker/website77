@@ -1,5 +1,5 @@
 # Site settings
-baseURL = "https://sieker77.netlify.app/"
+baseURL = "https://sieker-portfolio.netlify.app/"
 languageCode = "en-us"
 title = "Christoph"
 theme = "forty"
