@@ -1,17 +1,15 @@
 ---
-title: "Covid analysis"
-author: "Christoph Sieker"
-date: "04/10/2020"
-output:
-  html_document:
-    theme: flatly
-    highlight: zenburn
-    number_sections: yes
-    toc: yes
-    toc_float: yes
-    code_folding: show
+categories:
+- ""
+- ""
+date: "2020-10-15"
+description: Covid data
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog5
+title: Analysis of Covid
 ---
-
 ```{r, setup, include=FALSE}
 knitr::opts_chunk$set(
   message = FALSE, 
