@@ -20,7 +20,7 @@ disqusShortname = ""
 
   # Provide your metadata here.
   name = "Christoph Sieker"
-  description = "MFA student"
+  description = "MFA student at LBS"
 
   # Link custom assets relative to /static
   custom_css = []
@@ -41,7 +41,7 @@ disqusShortname = ""
     subtitle = "Portfolio Website"
     menu = "Menu"
     # Optional logo as brand stored in img/
-    logo = "London_Business_School_Logo.png"
+    #logo = "London_Business_School_Logo.png"
 
     [[params.navigation.links]]
       name = "Home"
