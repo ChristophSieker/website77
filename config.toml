@@ -142,7 +142,7 @@ disqusShortname = ""
     subtitle = """
     Student. Adventurer. European. Gifted with many interests, I'm aming to spread the values
     of the French Revolution across the globe - Liberté, Egalité, Fraternité. In order to collaborate,
-    feel free to contact me or have a glance on my CV"""
+    feel free to contact me or have a glance on my CV."""
     
     buttonText = "Download my CV"
     url = "blogs/CV Christoph Sieker.pdf"
