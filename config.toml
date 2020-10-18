@@ -140,17 +140,10 @@ disqusShortname = ""
     enable = true
     title = "My journey to LBS and beyond"
     subtitle = """
-    My name is Christoph Sieker and I am from Germany. I studied Business Administration during my Bachelors at the [University of Mannheim](https://www.uni-mannheim.de/en/). As part of my studies I also spent a semester abroad in Sydney, Australia.
-
-During my free time I love to do sports. These include: \n
-
-1. Surfing
-2. Tennis
-3. Hockey
-4. Marathon
-
-*That's me so far. If you have any questions, feel free to reach out or have a glance on my CV.*
-"""
+    Student. Adventurer. European. Gifted with many interests, I'm aming to spread the values
+    of the French Revolution across the globe - Liberté, Egalité, Fraternité. In order to collaborate,
+    feel free to contact me or have a glance on my CV"""
+    
     buttonText = "Download my CV"
     url = "blogs/CV Christoph Sieker.pdf"
 
