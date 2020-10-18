@@ -140,7 +140,7 @@ disqusShortname = ""
     enable = true
     title = "My journey to LBS and beyond"
     subtitle = """
-    Student. Adventurer. European. Gifted with many interests, I'm aming to spread the values
+    Student. Adventurer. European. Born and raised in the heart of Europe, I'm aming to spread the values
     of the French Revolution across the globe - Liberté, Egalité, Fraternité. In order to collaborate,
     feel free to contact me or have a glance on my CV."""
     
@@ -169,7 +169,7 @@ disqusShortname = ""
     [[params.contact.address]]
     title = "Cavendish Buidlings 20"
     street = "Gilbert Street"
-    city = " W1K5HH London"
+    city = " W1K 5HH London"
     country = "United Kingdom"
 
   # Footer section
