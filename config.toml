@@ -138,12 +138,19 @@ disqusShortname = ""
   # Section Type Two
   [params.two]
     enable = true
-    title = "Massa libero"
-    subtitle = """Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. 
-    Mauris aliquet magna magna sed nunc rhoncus pharetra. 
-    Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. 
-    Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero.
-    Mauris aliquet magna magna sed nunc rhoncus amet pharetra et feugiat tempus."""
+    title = "My journey to LBS and beyond"
+    subtitle = """
+    My name is Christoph Sieker and I am from Germany. I studied Business Administration during my Bachelors at the [University of Mannheim](https://www.uni-mannheim.de/en/). As part of my studies I also spent a semester abroad in Sydney, Australia.
+
+During my free time I love to do sports. These include:
+
+1. Surfing
+2. Tennis
+3. Hockey
+4. Marathon
+
+*That's me so far. If you have any questions, feel free to reach out or have a glance on my CV.*
+"""
     buttonText = "Download my CV"
     url = "blogs/CV Christoph Sieker.pdf"
 
