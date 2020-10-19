@@ -41,8 +41,7 @@ library(vroom)
 ```
 
 
-
-# Challenge 1: CDC COVID-19 Public Use Data
+# CDC COVID-19 Public Use Data
 
 
 ```{r, cache=TRUE}

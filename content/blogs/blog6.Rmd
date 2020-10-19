@@ -1,0 +1,145 @@
+---
+categories:
+- ""
+- ""
+date: "2020-10-19"
+description: Obama vs. Trump
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog6
+title: US Presidential Approval Rates
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+```
+
+# Download Obama data
+
+```{r, cache=TRUE}
+
+data_obama <- vroom("00c -Pres-44-Obama - Job Approval - National-poll-responses-clean.tsv")
+
+glimpse(data_obama)
+
+skim(data_obama)
+```
+
+
+# Download Trump data
+
+```{r, cache=TRUE}
+# Import approval polls data
+approval_polllist <- read_csv('approval_polllist.csv')
+
+glimpse(approval_polllist)
+
+# Use `lubridate` to fix dates, as they are given as characters.
+
+library(lubridate)
+
+approval_polllist$modeldate<-mdy(approval_polllist$modeldate)
+approval_polllist$startdate<-mdy(approval_polllist$startdate)
+approval_polllist$enddate<-mdy(approval_polllist$enddate)
+approval_polllist$createddate<-mdy(approval_polllist$createddate)
+
+```
+
+
+# Presidential approval rate - Obama
+
+```{r, cache=TRUE, fig.length=30}
+#Adding net approval
+president_approval_obama <- data_obama %>%
+  mutate(net_approval = Approve - Disapprove)
+
+
+#Calculating statistics
+net_approval_data <- president_approval_obama %>%
+  group_by(week_number = isoweek(end_date), year=year(end_date)) %>% 
+  summarise(mean_app = mean(net_approval, na.rm = TRUE), 
+            sd_app = sd(net_approval, na.rm = TRUE), 
+            count_app = n(), se_app = sd_app / sqrt(count_app), 
+            t_critical = qt(0.975, count_app-1) , 
+            margin_of_error = t_critical * se_app, 
+            app_low = mean_app - margin_of_error, 
+            app_high = mean_app + margin_of_error) %>%
+  filter(count_app>1) %>%
+  filter(year >= "2009" & year <= "2016" )
+
+ggplot(net_approval_data, aes(x= week_number, y = mean_app, group=year, colour = factor(year)))+
+  geom_point() +
+  geom_line() +
+  geom_ribbon(aes(ymin=app_low,ymax=app_high,fill=factor(year)), alpha=0.1)+
+  geom_hline(yintercept=0, size=0.3, color="orange") +
+  facet_wrap(~year, nrow = 4) +
+  theme_minimal()+
+  scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
+  scale_y_continuous(breaks = seq(-30, 70, by = 20)) +
+  labs(title="Estimating Net Approval (approve-disapprove) for Barack Obama",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)") +
+  theme(legend.position = "none")
+  
+
+
+```
+
+
+# Presidential approval rate - Trump
+
+```{r, cache=TRUE}
+#Adding net approval
+president_approval <- approval_polllist %>%
+  mutate(net_approval = adjusted_approve - adjusted_disapprove)
+
+#Calculating statistics
+net_approval_weekly <- president_approval %>%
+  filter(subgroup == "Voters") %>%
+  group_by(week_number = isoweek(enddate), year=year(enddate)) %>% 
+  summarise(mean_app = mean(net_approval, na.rm = TRUE), sd_app = sd(net_approval, na.rm = TRUE), count_app = n(), se_app = sd_app / sqrt(count_app), t_critical = qt(0.975, count_app-1) , margin_of_error = t_critical * se_app, app_low = mean_app - margin_of_error, app_high = mean_app + margin_of_error) %>%
+  filter(count_app>1)
+
+ggplot(net_approval_weekly, aes(x= week_number, y = mean_app, group=year, colour = factor(year)))+
+  geom_point() +
+  geom_line() +
+  geom_ribbon(aes(ymin=app_low,ymax=app_high,fill=factor(year)), alpha=0.1)+
+  geom_hline(yintercept=0, size=0.3, color="orange") +
+  facet_wrap(~year, nrow = 2) +
+  theme_minimal()+
+  scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
+  scale_y_continuous(breaks = seq(-35, 15, by = 5)) +
+labs(title="Estimating Net Approval (approve-disapprove) for Donald Trump
+",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)") +
+  theme(legend.position = "none")
+
+
+```
+
+
+

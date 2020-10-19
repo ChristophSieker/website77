@@ -1,0 +1,403 @@
+---
+categories:
+- ""
+- ""
+date: "2020-10-19"
+description: Obama vs. Trump
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog6
+title: US Presidential Approval Rates
+---
+
+
+
+<div id="download-obama-data" class="section level1">
+<h1>Download Obama data</h1>
+<pre class="r"><code>data_obama &lt;- vroom(&quot;00c -Pres-44-Obama - Job Approval - National-poll-responses-clean.tsv&quot;)
+
+glimpse(data_obama)</code></pre>
+<pre><code>## Rows: 11,696
+## Columns: 14
+## $ Approve              &lt;dbl&gt; 54, 59, 58, 57, 95, 13, 55, 57, 52, 86, 19, 45...
+## $ Disapprove           &lt;dbl&gt; 40, 37, 38, 39, 4, 82, 37, 39, 40, 10, 78, 41,...
+## $ Undecided            &lt;dbl&gt; 6, NA, NA, 4, 1, 5, 8, NA, 8, 4, 4, 14, 4, 0, ...
+## $ poll_slug            &lt;chr&gt; &quot;arg-27037&quot;, &quot;gallup-27036&quot;, &quot;gallup-27033&quot;, &quot;...
+## $ survey_house         &lt;chr&gt; &quot;ARG&quot;, &quot;Gallup&quot;, &quot;Gallup&quot;, &quot;FOX&quot;, &quot;FOX&quot;, &quot;FOX&quot;...
+## $ start_date           &lt;date&gt; 2017-01-17, 2017-01-17, 2017-01-16, 2017-01-1...
+## $ end_date             &lt;date&gt; 2017-01-20, 2017-01-19, 2017-01-18, 2017-01-1...
+## $ question_text        &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...
+## $ sample_subpopulation &lt;chr&gt; &quot;Adults&quot;, &quot;Adults&quot;, &quot;Adults&quot;, &quot;Registered Vote...
+## $ observations         &lt;dbl&gt; 1100, 1500, 1500, 1006, NA, NA, NA, 1500, 1447...
+## $ margin_of_error      &lt;dbl&gt; 3.0, 3.0, 3.0, 3.0, 4.5, 5.0, 7.0, 3.0, 3.0, N...
+## $ mode                 &lt;chr&gt; &quot;Live Phone&quot;, &quot;Live Phone&quot;, &quot;Live Phone&quot;, &quot;Liv...
+## $ partisanship         &lt;chr&gt; &quot;Nonpartisan&quot;, &quot;Nonpartisan&quot;, &quot;Nonpartisan&quot;, &quot;...
+## $ partisan_affiliation &lt;chr&gt; &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;...</code></pre>
+<pre class="r"><code>skim(data_obama)</code></pre>
+<table>
+<caption><span id="tab:unnamed-chunk-1">Table 1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">data_obama</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">11696</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">14</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">6</td>
+</tr>
+<tr class="odd">
+<td align="left">Date</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">logical</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">poll_slug</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">80</td>
+<td align="right">0</td>
+<td align="right">7549</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">survey_house</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">76</td>
+<td align="right">0</td>
+<td align="right">114</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">sample_subpopulation</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">6</td>
+<td align="right">31</td>
+<td align="right">0</td>
+<td align="right">12</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">mode</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">8</td>
+<td align="right">17</td>
+<td align="right">0</td>
+<td align="right">5</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">partisanship</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">7</td>
+<td align="right">11</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">partisan_affiliation</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: Date</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="left">min</th>
+<th align="left">max</th>
+<th align="left">median</th>
+<th align="right">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">start_date</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2008-11-19</td>
+<td align="left">2017-01-17</td>
+<td align="left">2012-10-31</td>
+<td align="right">2899</td>
+</tr>
+<tr class="even">
+<td align="left">end_date</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="left">2008-11-23</td>
+<td align="left">2017-01-20</td>
+<td align="left">2012-11-03</td>
+<td align="right">2890</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: logical</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="left">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">question_text</td>
+<td align="right">11696</td>
+<td align="right">0</td>
+<td align="right">NaN</td>
+<td align="left">:</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Approve</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">46.85</td>
+<td align="right">17.93</td>
+<td align="right">2</td>
+<td align="right">42</td>
+<td align="right">47</td>
+<td align="right">51</td>
+<td align="right">95</td>
+<td align="left">▂▁▇▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Disapprove</td>
+<td align="right">186</td>
+<td align="right">0.98</td>
+<td align="right">48.70</td>
+<td align="right">18.13</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">49</td>
+<td align="right">53</td>
+<td align="right">97</td>
+<td align="left">▁▁▇▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Undecided</td>
+<td align="right">6164</td>
+<td align="right">0.47</td>
+<td align="right">5.28</td>
+<td align="right">3.70</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">5</td>
+<td align="right">7</td>
+<td align="right">75</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">observations</td>
+<td align="right">1633</td>
+<td align="right">0.86</td>
+<td align="right">1210.19</td>
+<td align="right">1393.38</td>
+<td align="right">8</td>
+<td align="right">584</td>
+<td align="right">1500</td>
+<td align="right">1500</td>
+<td align="right">70194</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">margin_of_error</td>
+<td align="right">3497</td>
+<td align="right">0.70</td>
+<td align="right">3.30</td>
+<td align="right">2.72</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">3</td>
+<td align="right">235</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="download-trump-data" class="section level1">
+<h1>Download Trump data</h1>
+<pre class="r"><code># Import approval polls data
+approval_polllist &lt;- read_csv(&#39;approval_polllist.csv&#39;)
+
+glimpse(approval_polllist)</code></pre>
+<pre><code>## Rows: 15,619
+## Columns: 22
+## $ president           &lt;chr&gt; &quot;Donald Trump&quot;, &quot;Donald Trump&quot;, &quot;Donald Trump&quot;,...
+## $ subgroup            &lt;chr&gt; &quot;All polls&quot;, &quot;All polls&quot;, &quot;All polls&quot;, &quot;All pol...
+## $ modeldate           &lt;chr&gt; &quot;9/27/2020&quot;, &quot;9/27/2020&quot;, &quot;9/27/2020&quot;, &quot;9/27/20...
+## $ startdate           &lt;chr&gt; &quot;1/20/2017&quot;, &quot;1/20/2017&quot;, &quot;1/20/2017&quot;, &quot;1/21/20...
+## $ enddate             &lt;chr&gt; &quot;1/22/2017&quot;, &quot;1/22/2017&quot;, &quot;1/24/2017&quot;, &quot;1/23/20...
+## $ pollster            &lt;chr&gt; &quot;Gallup&quot;, &quot;Morning Consult&quot;, &quot;Ipsos&quot;, &quot;Gallup&quot;,...
+## $ grade               &lt;chr&gt; &quot;B&quot;, &quot;B/C&quot;, &quot;B-&quot;, &quot;B&quot;, &quot;B-&quot;, &quot;C+&quot;, &quot;B+&quot;, &quot;B&quot;, &quot;...
+## $ samplesize          &lt;dbl&gt; 1500, 1992, 1632, 1500, 1651, 1500, 1190, 1500,...
+## $ population          &lt;chr&gt; &quot;a&quot;, &quot;rv&quot;, &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;lv&quot;, &quot;rv&quot;, &quot;a&quot;, &quot;lv&quot;...
+## $ weight              &lt;dbl&gt; 0.262, 0.680, 0.153, 0.243, 0.142, 0.200, 1.514...
+## $ influence           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,...
+## $ approve             &lt;dbl&gt; 45.0, 46.0, 42.1, 45.0, 42.3, 57.0, 36.0, 46.0,...
+## $ disapprove          &lt;dbl&gt; 45.0, 37.0, 45.2, 46.0, 45.8, 43.0, 44.0, 45.0,...
+## $ adjusted_approve    &lt;dbl&gt; 45.7, 45.3, 43.2, 45.7, 43.4, 51.5, 37.6, 46.7,...
+## $ adjusted_disapprove &lt;dbl&gt; 43.6, 38.3, 43.9, 44.6, 44.5, 44.5, 42.8, 43.6,...
+## $ multiversions       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,...
+## $ tracking            &lt;lgl&gt; TRUE, NA, TRUE, TRUE, TRUE, TRUE, NA, TRUE, TRU...
+## $ url                 &lt;chr&gt; &quot;http://www.gallup.com/poll/201617/gallup-daily...
+## $ poll_id             &lt;dbl&gt; 49253, 49249, 49426, 49262, 49425, 49266, 49260...
+## $ question_id         &lt;dbl&gt; 77265, 77261, 77599, 77274, 77598, 77278, 77272...
+## $ createddate         &lt;chr&gt; &quot;1/23/2017&quot;, &quot;1/23/2017&quot;, &quot;3/1/2017&quot;, &quot;1/24/201...
+## $ timestamp           &lt;chr&gt; &quot;00:45:20 27 Sep 2020&quot;, &quot;00:45:20 27 Sep 2020&quot;,...</code></pre>
+<pre class="r"><code># Use `lubridate` to fix dates, as they are given as characters.
+
+library(lubridate)
+
+approval_polllist$modeldate&lt;-mdy(approval_polllist$modeldate)
+approval_polllist$startdate&lt;-mdy(approval_polllist$startdate)
+approval_polllist$enddate&lt;-mdy(approval_polllist$enddate)
+approval_polllist$createddate&lt;-mdy(approval_polllist$createddate)</code></pre>
+</div>
+<div id="presidential-approval-rate---obama" class="section level1">
+<h1>Presidential approval rate - Obama</h1>
+<pre class="r"><code>#Adding net approval
+president_approval_obama &lt;- data_obama %&gt;%
+  mutate(net_approval = Approve - Disapprove)
+
+
+#Calculating statistics
+net_approval_data &lt;- president_approval_obama %&gt;%
+  group_by(week_number = isoweek(end_date), year=year(end_date)) %&gt;% 
+  summarise(mean_app = mean(net_approval, na.rm = TRUE), 
+            sd_app = sd(net_approval, na.rm = TRUE), 
+            count_app = n(), se_app = sd_app / sqrt(count_app), 
+            t_critical = qt(0.975, count_app-1) , 
+            margin_of_error = t_critical * se_app, 
+            app_low = mean_app - margin_of_error, 
+            app_high = mean_app + margin_of_error) %&gt;%
+  filter(count_app&gt;1) %&gt;%
+  filter(year &gt;= &quot;2009&quot; &amp; year &lt;= &quot;2016&quot; )
+
+ggplot(net_approval_data, aes(x= week_number, y = mean_app, group=year, colour = factor(year)))+
+  geom_point() +
+  geom_line() +
+  geom_ribbon(aes(ymin=app_low,ymax=app_high,fill=factor(year)), alpha=0.1)+
+  geom_hline(yintercept=0, size=0.3, color=&quot;orange&quot;) +
+  facet_wrap(~year, nrow = 4) +
+  theme_minimal()+
+  scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
+  scale_y_continuous(breaks = seq(-30, 70, by = 20)) +
+  labs(title=&quot;Estimating Net Approval (approve-disapprove) for Barack Obama&quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average net approval (%)&quot;) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
+<div id="presidential-approval-rate---trump" class="section level1">
+<h1>Presidential approval rate - Trump</h1>
+<pre class="r"><code>#Adding net approval
+president_approval &lt;- approval_polllist %&gt;%
+  mutate(net_approval = adjusted_approve - adjusted_disapprove)
+
+#Calculating statistics
+net_approval_weekly &lt;- president_approval %&gt;%
+  filter(subgroup == &quot;Voters&quot;) %&gt;%
+  group_by(week_number = isoweek(enddate), year=year(enddate)) %&gt;% 
+  summarise(mean_app = mean(net_approval, na.rm = TRUE), sd_app = sd(net_approval, na.rm = TRUE), count_app = n(), se_app = sd_app / sqrt(count_app), t_critical = qt(0.975, count_app-1) , margin_of_error = t_critical * se_app, app_low = mean_app - margin_of_error, app_high = mean_app + margin_of_error) %&gt;%
+  filter(count_app&gt;1)
+
+ggplot(net_approval_weekly, aes(x= week_number, y = mean_app, group=year, colour = factor(year)))+
+  geom_point() +
+  geom_line() +
+  geom_ribbon(aes(ymin=app_low,ymax=app_high,fill=factor(year)), alpha=0.1)+
+  geom_hline(yintercept=0, size=0.3, color=&quot;orange&quot;) +
+  facet_wrap(~year, nrow = 2) +
+  theme_minimal()+
+  scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
+  scale_y_continuous(breaks = seq(-35, 15, by = 5)) +
+labs(title=&quot;Estimating Net Approval (approve-disapprove) for Donald Trump
+&quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average net approval (%)&quot;) +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/blogs/blog6_files/figure-html/unnamed-chunk-4-1.png" width="648" style="display: block; margin: auto;" /></p>
+</div>
