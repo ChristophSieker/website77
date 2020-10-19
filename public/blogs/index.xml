@@ -8,6 +8,15 @@
     <language>en-us</language>
     <lastBuildDate>Tue, 31 Oct 2017 22:27:21 -0500</lastBuildDate><atom:link href="/blogs/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>California Contributors plots - US Election 2016</title>
+      <link>/blogs/blog7/</link>
+      <pubDate>Mon, 19 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/blogs/blog7/</guid>
+      <description>knitr::opts_chunk$set(message = FALSE, warning = FALSE, tidy=FALSE, # display code as typedsize=&amp;quot;small&amp;quot;) # slightly smaller font for codeoptions(digits = 3)# default figure sizeknitr::opts_chunk$set(fig.width=6.75, fig.height=6.75,fig.align = &amp;quot;center&amp;quot;)CA_contributors_2016 &amp;lt;- vroom::vroom(here::here(&amp;quot;data&amp;quot;,&amp;quot;CA_contributors_2016.csv&amp;quot;))zip_codes &amp;lt;- vroom::vroom(here::here(&amp;quot;data&amp;quot;,&amp;quot;zip_code_database.csv&amp;quot;))#CA_contributors_2016 %&amp;gt;%#glimpse %&amp;gt;%#skim#zip_codes %&amp;gt;%#glimpse %&amp;gt;%#skim#Get total donations per zip code per candidatedonations_by_zip &amp;lt;- CA_contributors_2016 %&amp;gt;%group_by(cand_nm, zip) %&amp;gt;%summarize(total_by_zip = sum(contb_receipt_amt))#Filter out the unnecessary information in the zip_codes datacali_cities &amp;lt;- zip_codes %&amp;gt;%filter(state == &amp;quot;CA&amp;quot;) %&amp;gt;%transform(zip = as.</description>
+    </item>
+    
+    <item>
       <title>US Presidential Approval Rates</title>
       <link>/blogs/blog6/</link>
       <pubDate>Mon, 19 Oct 2020 00:00:00 +0000</pubDate>
