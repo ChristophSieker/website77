@@ -110,14 +110,14 @@ disqusShortname = ""
       url = "blogs/blog7"
 
     [[params.tiles.showcase]]
-      title = "Ipsum"
-      subtitle = "Nisl Sed Aliquam"
+      title = "Wisdom of alcohol spreads across the globe"
+      subtitle = "Different countries, different cultures, different drinking habits"
       image = "pic04.jpg"
-      url = "blogs/ipsum"
+      url = "blogs/blog9"
 
     [[params.tiles.showcase]]
-      title = "Consequat"
-      subtitle = "Ipsum Dolor Sit Amet"
+      title = "xxx"
+      subtitle = "xxx"
       image = "pic05.jpg"
       url = "blogs/ipsum"
 
