@@ -1,0 +1,85 @@
+---
+categories:
+- ""
+- ""
+date: "2020-10-19"
+description: Trump vs. Clinton
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog7
+title: California Contributors plots - US Election 2016
+---
+
+
+
+<pre class="r"><code>knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size=&quot;small&quot;)   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = &quot;center&quot;
+)</code></pre>
+<pre class="r"><code>CA_contributors_2016 &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;CA_contributors_2016.csv&quot;))
+zip_codes &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;zip_code_database.csv&quot;))
+
+#CA_contributors_2016 %&gt;%
+  #glimpse %&gt;%
+  #skim
+
+#zip_codes %&gt;%
+  #glimpse %&gt;%
+  #skim
+
+#Get total donations per zip code per candidate
+donations_by_zip &lt;- CA_contributors_2016 %&gt;%
+  group_by(cand_nm, zip) %&gt;%
+  summarize(total_by_zip = sum(contb_receipt_amt))
+
+#Filter out the unnecessary information in the zip_codes data
+cali_cities &lt;- zip_codes %&gt;%
+  filter(state == &quot;CA&quot;) %&gt;%
+  transform(zip = as.double(zip)) %&gt;%
+  select(zip, primary_city)
+
+#Find the donations per city for all candidates
+donations_by_city &lt;- donations_by_zip %&gt;%
+  inner_join(cali_cities, by = &quot;zip&quot;) %&gt;%
+  group_by(cand_nm, primary_city) %&gt;%
+  summarize(total_by_city = sum(total_by_zip))
+
+#Narrow it down to just the two presidential nominees and their top 10 cities
+presidentials &lt;- donations_by_city %&gt;%
+  filter(cand_nm == &quot;Trump, Donald J.&quot; | cand_nm == &quot;Clinton, Hillary Rodham&quot;) %&gt;%
+  group_by(cand_nm) %&gt;%
+  slice_max(n=10, order_by = total_by_city) %&gt;%
+  ungroup()  # mutate(cand_nm = as.factor(cand_nm), reorder_within(primary_city, total_by_city, cand_nm))
+
+
+pres_plot &lt;- ggplot(presidentials, aes(x=reorder_within(primary_city, total_by_city, cand_nm), total_by_city, y = total_by_city)) +
+  geom_bar(stat=&#39;identity&#39;, aes(color = as.factor(cand_nm), fill = as.factor(cand_nm)), show.legend = FALSE) +
+  coord_flip() +
+  labs(title = &quot;Where did candidates raise the most money?&quot;, y = &quot;Amount raised&quot;) +
+  scale_y_continuous(labels = scales::dollar) +
+  scale_x_reordered() +
+  scale_fill_manual(values = c(&quot;#2e74c0&quot;, &quot;#cb454a&quot;)) +
+  scale_color_manual(values = c(&quot;#bcd3eb&quot;, &quot;#eab2b4&quot;)) +
+  ggtitle(&quot;Where did candidates raise the most money?&quot;) +
+  theme(plot.title = element_text(size = 30, face = &quot;bold&quot;)) +
+  facet_wrap(~cand_nm, scales = &quot;free&quot;) +
+  theme(strip.background = element_rect(fill=&quot;lightGrey&quot;, color = &quot;black&quot;, size = 0.5),
+              strip.text = element_text(size=8),
+              panel.border = element_rect(colour = &quot;black&quot;, size=0.5, fill = NA, linetype = &quot;solid&quot;),
+        panel.background = element_rect(fill = &quot;white&quot;),
+        panel.grid.major = element_line(colour = &quot;#f0f0f0&quot;),
+              plot.title = element_text(size = 8),
+              axis.title.y = element_blank()) + theme(plot.title = element_text(size = 14))
+
+pres_plot</code></pre>
+<p><img src="/blogs/blog7_files/figure-html/load_CA_data-1.png" width="648" style="display: block; margin: auto;" /></p>

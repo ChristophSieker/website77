@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+
+    <head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="MFA student at LBS">
+	<meta name="author" content="Christoph Sieker">
+	<meta name="generator" content="Hugo 0.76.5" />
+	<title>California Contributors plots - US Election 2016 &middot; Christoph</title>
+	<!-- Stylesheets -->
+	
+	<link rel="stylesheet" href="/css/main.css"/>
+	
+	
+
+	
+
+	<!-- Custom Fonts -->
+	<link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+	
+	<link rel="shortcut icon" type="image/x-icon" href="/img/favicon_LBS.ico">
+	<link rel="icon" type="image/x-icon" href="/img/favicon_LBS.ico">
+	
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="js/ie/html5shiv.js"></script>
+	<script src="js/ie/html5shiv.jsrespond.min.js"></script>
+	<![endif]-->
+</head>
+
+    <body>
+
+    <!-- Wrapper -->
+        <div id="wrapper">
+
+            <!-- Header -->
+    <header id="header" class="alt">
+        <a href="/" class="logo"><strong>Christoph Sieker</strong> <span>Portfolio Website</span></a>
+        <nav>
+            <a href="#menu">Menu</a>
+        </nav>
+    </header>
+
+<!-- Menu -->
+    <nav id="menu">
+        <ul class="links">
+            
+                <li><a href="/">Home</a></li>
+            
+                <li><a href="/blogs">Blogs</a></li>
+            
+                <li><a href="/"></a></li>
+            
+                <li><a href="/"></a></li>
+            
+
+        </ul>
+        <ul class="actions vertical">
+            
+                <li><a href="/blogs" class="button special fit">Get Started</a></li>
+            
+            
+                <li><a href="/" class="button fit"></a></li>
+            
+        </ul>
+    </nav>
+
+        <!-- Main -->
+            <div id="main" class="alt">
+
+                
+                    <section id="one">
+                        <div class="inner">
+                            <header class="major">
+                                <h1>California Contributors plots - US Election 2016</h1>
+                            </header>
+                            
+                                <span class="image main"><img src="/img/blogs/pic07.jpg" alt="" /></span>
+                            
+                            
+
+
+<pre class="r"><code>knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size=&quot;small&quot;)   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = &quot;center&quot;
+)</code></pre>
+<pre class="r"><code>CA_contributors_2016 &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;CA_contributors_2016.csv&quot;))
+zip_codes &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;zip_code_database.csv&quot;))
+
+#CA_contributors_2016 %&gt;%
+  #glimpse %&gt;%
+  #skim
+
+#zip_codes %&gt;%
+  #glimpse %&gt;%
+  #skim
+
+#Get total donations per zip code per candidate
+donations_by_zip &lt;- CA_contributors_2016 %&gt;%
+  group_by(cand_nm, zip) %&gt;%
+  summarize(total_by_zip = sum(contb_receipt_amt))
+
+#Filter out the unnecessary information in the zip_codes data
+cali_cities &lt;- zip_codes %&gt;%
+  filter(state == &quot;CA&quot;) %&gt;%
+  transform(zip = as.double(zip)) %&gt;%
+  select(zip, primary_city)
+
+#Find the donations per city for all candidates
+donations_by_city &lt;- donations_by_zip %&gt;%
+  inner_join(cali_cities, by = &quot;zip&quot;) %&gt;%
+  group_by(cand_nm, primary_city) %&gt;%
+  summarize(total_by_city = sum(total_by_zip))
+
+#Narrow it down to just the two presidential nominees and their top 10 cities
+presidentials &lt;- donations_by_city %&gt;%
+  filter(cand_nm == &quot;Trump, Donald J.&quot; | cand_nm == &quot;Clinton, Hillary Rodham&quot;) %&gt;%
+  group_by(cand_nm) %&gt;%
+  slice_max(n=10, order_by = total_by_city) %&gt;%
+  ungroup()  # mutate(cand_nm = as.factor(cand_nm), reorder_within(primary_city, total_by_city, cand_nm))
+
+
+pres_plot &lt;- ggplot(presidentials, aes(x=reorder_within(primary_city, total_by_city, cand_nm), total_by_city, y = total_by_city)) +
+  geom_bar(stat=&#39;identity&#39;, aes(color = as.factor(cand_nm), fill = as.factor(cand_nm)), show.legend = FALSE) +
+  coord_flip() +
+  labs(title = &quot;Where did candidates raise the most money?&quot;, y = &quot;Amount raised&quot;) +
+  scale_y_continuous(labels = scales::dollar) +
+  scale_x_reordered() +
+  scale_fill_manual(values = c(&quot;#2e74c0&quot;, &quot;#cb454a&quot;)) +
+  scale_color_manual(values = c(&quot;#bcd3eb&quot;, &quot;#eab2b4&quot;)) +
+  ggtitle(&quot;Where did candidates raise the most money?&quot;) +
+  theme(plot.title = element_text(size = 30, face = &quot;bold&quot;)) +
+  facet_wrap(~cand_nm, scales = &quot;free&quot;) +
+  theme(strip.background = element_rect(fill=&quot;lightGrey&quot;, color = &quot;black&quot;, size = 0.5),
+              strip.text = element_text(size=8),
+              panel.border = element_rect(colour = &quot;black&quot;, size=0.5, fill = NA, linetype = &quot;solid&quot;),
+        panel.background = element_rect(fill = &quot;white&quot;),
+        panel.grid.major = element_line(colour = &quot;#f0f0f0&quot;),
+              plot.title = element_text(size = 8),
+              axis.title.y = element_blank()) + theme(plot.title = element_text(size = 14))
+
+pres_plot</code></pre>
+<p><img src="/blogs/blog7_files/figure-html/load_CA_data-1.png" width="648" style="display: block; margin: auto;" /></p>
+
+                        </div>
+                    </section>
+            <!-- Disqus Inject -->
+                
+            </div>
+            
+        <!-- Footer -->
+            
+                <!-- Footer -->
+    <footer id="footer">
+        <div class="inner">
+            <ul class="icons">
+                
+                    <li><a href="https://www.facebook.com/ChristophAlexanderSieker" class="icon alt fa-facebook" target="_blank"><span class="label">Facebook</span></a></li>
+                
+                    <li><a href="https://www.instagram.com/christoph_sieker" class="icon alt fa-instagram" target="_blank"><span class="label">Instagram</span></a></li>
+                
+                    <li><a href="https://www.github.com" class="icon alt fa-github" target="_blank"><span class="label">GitHub</span></a></li>
+                
+                    <li><a href="https://www.linkedin.com/in/christoph-sieker/" class="icon alt fa-linkedin" target="_blank"><span class="label">LinkedIn</span></a></li>
+                
+            </ul>
+            <ul class="copyright">
+                <li>&copy; Christoph Sieker 2020</li>
+                
+                <li>Design:  <a href="https://www.html5up.net">HTML5 UP</a></li>
+                
+            </ul>
+        </div>
+    </footer>
+
+            
+        </div>
+
+    <!-- Scripts -->
+        <!-- Scripts -->
+    <!-- jQuery -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+
+    
+
+    <!-- Main JS -->
+    <script src="/js/main.js"></script>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-180686344-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+    
+
+    </body>
+</html>
