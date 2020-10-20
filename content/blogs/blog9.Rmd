@@ -42,8 +42,8 @@ library(tidyquant)
 ```
 
 ```{r, load_alcohol_data}
-library(fivethirtyeight)
-data(drinks)
+
+drinks <- vroom::vroom(here::here("data","drinks.csv"))
 ```
 
 # Where Do People Drink The Most Beer, Wine And Spirits?
