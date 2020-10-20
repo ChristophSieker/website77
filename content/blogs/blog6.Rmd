@@ -41,15 +41,21 @@ library(readxl)
 library(vroom)
 ```
 
+A comparison of approval rates of the Obama and Trump shows the following:
+
+* Besides the early beginning of his term of office, President Trump has not been able to achieve a positive net approval rate. For instance, during the beginning months of the covid-19 pandemic President Trump suffered significant loss in approval. Main reason for this decline is probably his poor crisis management underestimating the duration of the covid-19 pandemic. 
+
+* Barack Obama was able to achieve positive  net approval rates at least during parts of his two terms of office. This happened not just in the beginning and in the end of his time in the White House, but also within his 8 years as US president. His popularity is also reflected in his reelection. Nevertheless, Obama also struggled with negative net approval rates. Reasons for this might be his continued conflict with the Republican dominated senate leading to a law blockade as well as his hesitant foreign policy. 
+
 # Download Obama data
 
 ```{r, cache=TRUE}
 
 data_obama <- vroom("00c -Pres-44-Obama - Job Approval - National-poll-responses-clean.tsv")
 
-glimpse(data_obama)
+#glimpse(data_obama)
 
-skim(data_obama)
+#skim(data_obama)
 ```
 
 
@@ -59,7 +65,7 @@ skim(data_obama)
 # Import approval polls data
 approval_polllist <- read_csv('approval_polllist.csv')
 
-glimpse(approval_polllist)
+#glimpse(approval_polllist)
 
 # Use `lubridate` to fix dates, as they are given as characters.
 
