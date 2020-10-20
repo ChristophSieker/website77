@@ -7,7 +7,7 @@ description: Different countries, different cultures, different drinking habits
 draft: false
 image: pic07.jpg
 keywords: ""
-slug: blog8
+slug: blog9
 title: Wisdom of alcohol spreads across the globe
 ---
 
@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
   fig.height=6.75,
   fig.align = &quot;center&quot;
 )</code></pre>
-<pre class="r"><code>drinks &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;drinks.csv&quot;))</code></pre>
+<pre class="r"><code>drinks &lt;- vroom(here::here(&quot;data&quot;,&quot;drinks.csv&quot;))</code></pre>
 <div id="where-do-people-drink-the-most-beer-wine-and-spirits" class="section level1">
 <h1>Where Do People Drink The Most Beer, Wine And Spirits?</h1>
 <pre class="r"><code>desc_beer&lt;- drinks %&gt;% 
