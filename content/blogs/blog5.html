@@ -64,11 +64,11 @@ ggplot(data = covid_deaths, aes(x = age_group, y = death_percentage)) + geom_col
 #Create separate graphs depending on sex and co-morbidities  
   facet_grid(medcond_yn_names ~ sex)</code></pre>
 <p><img src="/blogs/blog5_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
-<p>Looking at the plotted graphs, it is possible to derive three different assumptions.</p>
+<p>Looking at the plotted graphs, it is possible to derive three different assumptions:</p>
 <ul>
 <li><p>Higher age leads to a higher chance of death due to covid-19.</p></li>
 <li><p>The presence of co-morbidities increases the likelihood of death.</p></li>
-<li><p>Mens are more likely to die due to covid-19 than women. An on average unhealthier lifestyle might be a possible explanation for this phenomen. For instance, men smoke more than women.</p></li>
+<li><p>Men are more likely to die due to covid-19 than women. An on average unhealthier lifestyle might be a possible explanation for this phenomen. For instance, men smoke more than women.</p></li>
 </ul>
 </div>
 <div id="covid-death-rate-by-age-group-sex-and-whether-patient-was-admitted-to-icu" class="section level1">
@@ -116,7 +116,7 @@ ggplot(data = icu_covid, aes(x = age_group, y = death_percentage)) + geom_col(fi
 #Create separate graphs depending on sex and co-morbidities  
   facet_grid(icu_yn_names ~ sex)</code></pre>
 <p><img src="/blogs/blog5_files/figure-html/unnamed-chunk-5-1.png" width="648" style="display: block; margin: auto;" /></p>
-<p>Looking at the plotted graphs, it is possible to derive three interesting assumptions.</p>
+<p>Looking at the plotted graphs, it is possible to derive three interesting assumptions:</p>
 <ul>
 <li><p>Not surprisingly, chances of death increase if people had to be admitted to ICU. This accounts for all age groups.</p></li>
 <li><p>People aged 80+ are very likely (~80%) to die from covid-19 if admitted to ICU.</p></li>

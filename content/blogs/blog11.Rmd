@@ -67,9 +67,9 @@ bike <- bike0 %>%
 
 ```{r first_figure, fig.width = 10, fig.height=7}
 
-#Calculate average bike hires in 2015-2019 by month (expected rentals)
+#Calculate average bike hires in 2015-2020 by month (expected rentals)
 expected_rentals <- bike %>%
-  filter(year >=2015 & year <= 2019) %>%
+  filter(year >=2015 & year <= 2020) %>%
   group_by(month) %>%
   summarize(avg_hires = sum(bikes_hired)/n())
 
@@ -96,7 +96,7 @@ ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
   geom_line(size = 0.5, color = "blue", aes(y = avg_hires, group = 1)) +
 #Add labels
   labs(title = "Monthly changes in TfL bike rentals",
-       subtitle = "Change from monthly average shown in blue \n and calculated between 2015-2019",
+       subtitle = "Change from monthly average shown in blue \n and calculated between 2015-2020",
        y = "Bike rentals",x=NULL) +
 #Show a graph for each year
   facet_wrap(~year) +
@@ -114,9 +114,9 @@ ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
 
 ```{r weekly_changes, fig.width=10, fig.height =8}
 
-#Calculate average bike hires in 2015-2019 by week (expected rentals)
+#Calculate average bike hires in 2015-2020 by week (expected rentals)
 expected_rentals <- bike %>%
-  filter(year >=2015 & year <= 2019) %>%
+  filter(year >=2015 & year <= 2020) %>%
   group_by(week) %>%
   summarize(avg_hires = sum(bikes_hired)/n())
 
@@ -152,7 +152,7 @@ ggplot(actual_rentals, aes(x = week,y = per_change)) +
   geom_line(size = 0.2, color = "black", aes(y = per_change, group = 1)) +
 #Add labels
   labs(title = "Weekly changes in TfL bike rentals",
-       subtitle = "% Changes from weekly averages \n calculated between 2015-2019",
+       subtitle = "% Changes from weekly averages \n calculated between 2015-2020",
        y = "Bike rentals") +
     scale_y_continuous(labels = scales::percent) +
      scale_x_continuous(breaks=c(13,26, 39, 53))+

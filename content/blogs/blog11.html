@@ -29,9 +29,9 @@ bike &lt;- bike0 %&gt;%
           week = isoweek(day))</code></pre>
 <div id="monthly-changes-in-bike-rentals" class="section level1">
 <h1>Monthly changes in bike rentals</h1>
-<pre class="r"><code>#Calculate average bike hires in 2015-2019 by month (expected rentals)
+<pre class="r"><code>#Calculate average bike hires in 2015-2020 by month (expected rentals)
 expected_rentals &lt;- bike %&gt;%
-  filter(year &gt;=2015 &amp; year &lt;= 2019) %&gt;%
+  filter(year &gt;=2015 &amp; year &lt;= 2020) %&gt;%
   group_by(month) %&gt;%
   summarize(avg_hires = sum(bikes_hired)/n())
 
@@ -58,7 +58,7 @@ ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
   geom_line(size = 0.5, color = &quot;blue&quot;, aes(y = avg_hires, group = 1)) +
 #Add labels
   labs(title = &quot;Monthly changes in TfL bike rentals&quot;,
-       subtitle = &quot;Change from monthly average shown in blue \n and calculated between 2015-2019&quot;,
+       subtitle = &quot;Change from monthly average shown in blue \n and calculated between 2015-2020&quot;,
        y = &quot;Bike rentals&quot;,x=NULL) +
 #Show a graph for each year
   facet_wrap(~year) +
@@ -73,9 +73,9 @@ ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
 </div>
 <div id="weekly-changes-in-bike-rentals" class="section level1">
 <h1>Weekly changes in bike rentals</h1>
-<pre class="r"><code>#Calculate average bike hires in 2015-2019 by week (expected rentals)
+<pre class="r"><code>#Calculate average bike hires in 2015-2020 by week (expected rentals)
 expected_rentals &lt;- bike %&gt;%
-  filter(year &gt;=2015 &amp; year &lt;= 2019) %&gt;%
+  filter(year &gt;=2015 &amp; year &lt;= 2020) %&gt;%
   group_by(week) %&gt;%
   summarize(avg_hires = sum(bikes_hired)/n())
 
@@ -111,7 +111,7 @@ ggplot(actual_rentals, aes(x = week,y = per_change)) +
   geom_line(size = 0.2, color = &quot;black&quot;, aes(y = per_change, group = 1)) +
 #Add labels
   labs(title = &quot;Weekly changes in TfL bike rentals&quot;,
-       subtitle = &quot;% Changes from weekly averages \n calculated between 2015-2019&quot;,
+       subtitle = &quot;% Changes from weekly averages \n calculated between 2015-2020&quot;,
        y = &quot;Bike rentals&quot;) +
     scale_y_continuous(labels = scales::percent) +
      scale_x_continuous(breaks=c(13,26, 39, 53))+

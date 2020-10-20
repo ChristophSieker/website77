@@ -48,7 +48,11 @@ library(ggfortify)
 library(vroom)
 ```
 
-Considering myself an adventurer, I am always curious to explore new places. To share my passion, I would like to support you in planning your next trip to Singapore. Please feel free to have a look at the map below in order to find your perfect Airbnb in Singapore.
+Considering myself an adventurer, I am always curious to explore new places. To share my passion, I would like to support you in planning your next trip to Singapore. Please feel free to have a look at the map below in order to find your perfect Airbnb in Singapore. I already set the highest price per day to $100* and calculated the total price for four days to reflect the typical student travel preferences.
+
+
+
+*In contrast to the later mentioned total price the $100 do not include potential cleaning price and charge for extra people.
 
 # Data Tailoring
 
@@ -119,7 +123,7 @@ Singapore_data$security_deposit[is.na(Singapore_data$security_deposit)] <- 0
 ```
 
 
-## Filter to receive a more meaningful data set
+## Filter to receive a more meaningful data set and create new variable
 
 ```{r, new_price_variables}
 
@@ -128,7 +132,14 @@ Singapore_price_final <- Singapore_data %>%
   filter(minimum_nights <= 4,
          accommodates >= 2,
          price != 0,
-         price < 3000) 
+         price < 100) %>%
+
+#Calculating new variable price_4_nights including price, cleaning_fee, guests_included, extra_people
+   mutate(
+         price_4_nights = case_when(guests_included >= 2 ~ (price*4+cleaning_fee),
+                  TRUE ~ ((price+extra_people)*4+cleaning_fee)))
+
+
 ```
 
 
@@ -137,10 +148,10 @@ Singapore_price_final <- Singapore_data %>%
 ```{r, mapping}
 
 #Mapping
-coloured_price <- colorNumeric(palette = c("darkgreen", "yellow", "red3"), Singapore_price_final$price)
+coloured_price <- colorNumeric(palette = c("chartreuse", "forestgreen", "deepskyblue", "dodgerblue2", "gold", "goldenrod2", "firebrick1", "firebrick4" ), Singapore_price_final$price_4_nights)
 leaflet(Singapore_price_final) %>%
 #Control zoom function
-  addTiles(options = providerTileOptions(minZoom = 6)) %>%
+  addTiles(options = providerTileOptions(minZoom = 11)) %>%
    setView(lng = mean(Singapore_price_final$longitude),
            lat = mean(Singapore_price_final$latitude), 
            zoom = 6) %>%
@@ -149,14 +160,14 @@ leaflet(Singapore_price_final) %>%
                    lat = ~latitude,
                    radius = 1,
 #Add color depending on price
-                   color = ~coloured_price(price),
+                   color = ~coloured_price(price_4_nights),
                    fillOpacity = 0.5,
                    popup = ~listing_url,
                    label =  ~property_type) %>%
 #Add legend
   addLegend("bottomright", pal = coloured_price, 
-            values = ~price,
-    title = "Price of Airbnb",
+            values = ~price_4_nights,
+    title = "Price of Airbnb for 4 nights",
     labFormat = labelFormat(prefix = "$"),
     opacity = 1)
 ```

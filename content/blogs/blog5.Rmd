@@ -106,13 +106,13 @@ ggplot(data = covid_deaths, aes(x = age_group, y = death_percentage)) + geom_col
 
 ```
 
-Looking at the plotted graphs, it is possible to derive three different assumptions.
+Looking at the plotted graphs, it is possible to derive three different assumptions:
 
 * Higher age leads to a higher chance of death due to covid-19.
 
 * The presence of co-morbidities increases the likelihood of death.
 
-* Mens are more likely to die due to covid-19 than women. An on average unhealthier lifestyle might be a possible explanation for this phenomen. For instance, men smoke more than women. 
+* Men are more likely to die due to covid-19 than women. An on average unhealthier lifestyle might be a possible explanation for this phenomen. For instance, men smoke more than women. 
 
 # Covid death rate by age group, sex and whether patient was admitted to ICU
 
@@ -165,7 +165,7 @@ ggplot(data = icu_covid, aes(x = age_group, y = death_percentage)) + geom_col(fi
   facet_grid(icu_yn_names ~ sex)
 ```
 
-Looking at the plotted graphs, it is possible to derive three interesting assumptions.
+Looking at the plotted graphs, it is possible to derive three interesting assumptions:
 
 * Not surprisingly, chances of death increase if people had to be admitted to ICU. This accounts for all age groups.
 
