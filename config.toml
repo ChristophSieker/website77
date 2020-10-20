@@ -125,7 +125,7 @@ disqusShortname = ""
       title = "Boris goes Bicycle"
       subtitle = "TfL bike sharing"
       image = "pic06.jpg"
-      url = "blogs/blog10"
+      url = "blogs/aram"
     # You can make more showcases by copy and pasting the code above
 
   [params.blog]

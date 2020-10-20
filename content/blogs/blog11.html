@@ -1,0 +1,121 @@
+---
+categories:
+- ""
+- ""
+date: "2020-10-19"
+description: TfL bike sharing
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog11
+title: Boris goes Bicycle
+---
+
+
+
+<div id="excess-rentals-in-tfl-bike-sharing" class="section level1">
+<h1>Excess rentals in TfL bike sharing</h1>
+<pre class="r"><code># Use read_excel to read it as dataframe
+bike0 &lt;- read_excel(&quot;tfl.xlsx&quot;,
+                   sheet = &quot;Data&quot;,
+                   range = cell_cols(&quot;A:B&quot;))
+
+
+# change dates to get year, month, and week
+bike &lt;- bike0 %&gt;% 
+  clean_names() %&gt;% 
+  rename (bikes_hired = number_of_bicycle_hires) %&gt;% 
+  mutate (year = year(day),
+          month = lubridate::month(day, label = TRUE),
+          week = isoweek(day))</code></pre>
+<div id="monthly-changes-in-bike-rentals" class="section level2">
+<h2>Monthly changes in bike rentals</h2>
+<pre class="r"><code>#calculate average bike hires in 2015-2019 by month (expected rentals)
+expected_rentals &lt;- bike %&gt;%
+  filter(year &gt;=2015 &amp; year &lt;= 2019) %&gt;%
+  group_by(month) %&gt;%
+  summarize(avg_hires = sum(bikes_hired)/n())
+
+#calculate average bike hires by month including 2020 data (actual rentals)
+actual_rentals &lt;- bike %&gt;%
+  filter(year &gt;= 2015) %&gt;%
+  group_by(year, month) %&gt;%
+  summarize(actual_hires = sum(bikes_hired)/n()) %&gt;%
+  inner_join(expected_rentals, by = &quot;month&quot;)
+
+#plot the graph of change in monthly expected rentals vs actual rentals in 2015-2020
+ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
+  geom_ribbon(aes(ymin = actual_hires, ymax = pmin(actual_hires, avg_hires), group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = &#39;#4CC076&#39;, color = &quot;black&quot;, size=0.15) +
+  geom_ribbon(aes(ymin = avg_hires, ymax = pmin(actual_hires, avg_hires), group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = &quot;#CD8383&quot;, color = &quot;black&quot;, size=0.15) +
+  geom_line(size = 0.5, color = &quot;blue&quot;, aes(y = avg_hires, group = 1)) +
+  labs(title = &quot;Monthly changes in TfL bike rentals&quot;,
+       subtitle = &quot;Change from monthly average shown in blue \n and calculated between 2015-2019&quot;,
+       y = &quot;Bike rentals&quot;,x=NULL) +
+  facet_wrap(~year) +
+  theme(strip.background = element_rect(fill=&quot;white&quot;, size = 0.5),
+              strip.text = element_text(size=7),
+              panel.background = element_rect(fill = &quot;white&quot;),
+              panel.grid = element_line(colour = &quot;#f0f0f0&quot;),
+              plot.title = element_text(size = 7),
+              axis.title.y = element_blank()) + theme(plot.title = element_text(size = 14)) </code></pre>
+<p><img src="/blogs/blog11_files/figure-html/first_figure-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+<div id="weekly-changes-in-bike-rentals" class="section level2">
+<h2>Weekly changes in bike rentals</h2>
+<pre class="r"><code>library(FreqProf)
+
+#calculate average bike hires in 2015-2019 by week (expected rentals)
+expected_rentals &lt;- bike %&gt;%
+  filter(year &gt;=2015 &amp; year &lt;= 2019) %&gt;%
+  group_by(week) %&gt;%
+  summarize(avg_hires = sum(bikes_hired)/n())
+
+#calculate average bike hires by week including 2020 data (actual rentals) and % change between expected and actual rentals
+actual_rentals &lt;- bike %&gt;%
+  filter(year &gt;= 2015) %&gt;%
+  group_by(year, week) %&gt;%
+  summarize(actual_hires = sum(bikes_hired)/n()) %&gt;%
+  inner_join(expected_rentals, by = &quot;week&quot;) %&gt;%
+  summarize(week = week, per_change = (actual_hires-avg_hires)/avg_hires)
+
+
+#plot the graph of % change in weekly expected rentals vs actual rentals in 2015-2020
+ggplot(actual_rentals, aes(x = week,y = per_change)) +
+   annotate(&quot;rect&quot;, fill = &quot;#E0E0E0&quot;, alpha = 0.5, 
+        xmin = 13, xmax = 26,
+        ymin = -Inf, ymax = Inf)+  
+  annotate(&quot;rect&quot;, fill = &quot;#E0E0E0&quot;, alpha = 0.5, 
+        xmin = 39, xmax = 53,
+        ymin = -Inf, ymax = Inf)+
+   geom_ribbon(aes(ymin = pmin(0, per_change), ymax = 0, group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = &quot;#CD8383&quot;, color = &quot;grey&quot;) +
+  geom_ribbon(aes(ymin = 0, ymax = pmax(0, per_change), group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = &#39;#4CC076&#39;, color = &quot;grey&quot;) +
+  geom_line(size = 0.2, color = &quot;black&quot;, aes(y = per_change, group = 1)) +
+  labs(title = &quot;Weekly changes in TfL bike rentals&quot;,
+       subtitle = &quot;% Changes from weekly averages \n calculated between 2015-2019&quot;,
+       y = &quot;Bike rentals&quot;) +
+    scale_y_continuous(labels = scales::percent) +
+     scale_x_continuous(breaks=c(13,26, 39, 53))+
+  facet_wrap(~year) +
+  theme(strip.background = element_rect(fill=&quot;white&quot;, size = 0.5),
+              strip.text = element_text(size=8),
+              panel.background = element_rect(fill = &quot;white&quot;),
+              panel.grid = element_line(colour = &quot;#f0f0f0&quot;),
+              plot.title = element_text(size = 8),
+              axis.title.y = element_blank()) + theme(plot.title = element_text(size = 14))+
+  geom_rug(aes(colour=ifelse(per_change&gt;=0,&quot;&gt;=0&quot;,&quot;&lt;0&quot;)),sides=&quot;b&quot;,alpha=0.5)+
+    scale_colour_manual(values=c(&quot;#CD8383&quot;,&quot;#4CC076&quot;), guide=FALSE)</code></pre>
+<p><img src="/blogs/blog11_files/figure-html/weekly_changes-1.png" width="960" style="display: block; margin: auto;" /></p>
+</div>
+</div>
