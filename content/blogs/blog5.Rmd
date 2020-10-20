@@ -40,31 +40,25 @@ library(readxl)
 library(vroom)
 ```
 
-
-# CDC COVID-19 Public Use Data
-
+Explored covid-19 death data clearly underlines the importance of social distancing measures in order to protect older and ill society members.
 
 ```{r, cache=TRUE}
-# file contains 11 variables and 3.66m rows and is well over 380Mb. 
-# It will take time to download
 
 # URL link to CDC to download data
 url <- "https://data.cdc.gov/api/views/vbim-akqf/rows.csv?accessType=DOWNLOAD"
 
-covid_data <- vroom::vroom(url)%>% # If vroom::vroom(url) doesn't work, use read_csv(url)
+covid_data <- vroom::vroom(url)%>% 
   clean_names()
-
-
 ```
 
 
-## Covid death % by age group, sex and presence of co-morbidities
+# Covid death % by age group, sex and presence of co-morbidities
 
 ```{r, cache=TRUE}
 
 #glimpse(covid_data)
-#Data cleaning
 
+#Data cleaning
 cleaning_covid_data <- covid_data %>% 
   filter(medcond_yn != "Missing") %>% 
   filter(medcond_yn != "Unknown") %>% 
@@ -78,10 +72,9 @@ cleaning_covid_data <- covid_data %>%
 #glimpse(cleaning_covid_data)
 
 #Adding the death percentage
-
 covid_deaths <- cleaning_covid_data %>% 
   group_by(age_group,sex,medcond_yn,death_yn) %>% 
-  count() %>% 
+  count() %>%
   pivot_wider(names_from = death_yn, values_from = n) %>%
   mutate(death_percentage = Yes/(Yes+No))
 
@@ -98,18 +91,36 @@ labels = c("With comorbidities", "Without comorbidities"))
 #glimpse(covid_deaths)
 
 #Graphical reflection
-ggplot(data = covid_deaths, aes(x = age_group, y = death_percentage)) + geom_col(fill = "#6b7ca4", show.legend = FALSE) +  geom_text(aes(label = round(death_percentage*100, 1), hjust = 0.6)) + labs(title = "Covid death % by age group, sex and presence of co-morbidities", caption = "Source:CDC") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + scale_y_continuous(labels = scales::percent) + coord_flip() + facet_grid(medcond_yn_names ~ sex)
+ggplot(data = covid_deaths, aes(x = age_group, y = death_percentage)) + geom_col(fill = "#6b7ca4", show.legend = FALSE) +  
+  geom_text(aes(label = round(death_percentage*100, 1), hjust = 0.6)) +
+#Add labels  
+  labs(title = "Covid death % by age group, sex and presence of co-morbidities", caption = "Source:CDC") + 
+#Add theme and further features  
+  theme_bw() + 
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + scale_y_continuous(labels = scales::percent) + 
+#Flip axis  
+  coord_flip() + 
+#Create separate graphs depending on sex and co-morbidities  
+  facet_grid(medcond_yn_names ~ sex)
 
 
 ```
 
-## Covid death rate by age group, sex and whether patient was admitted to ICU
+Looking at the plotted graphs, it is possible to derive three different assumptions.
+
+* Higher age leads to a higher chance of death due to covid-19.
+
+* The presence of co-morbidities increases the likelihood of death.
+
+* Mens are more likely to die due to covid-19 than women. An on average unhealthier lifestyle might be a possible explanation for this phenomen. For instance, men smoke more than women. 
+
+# Covid death rate by age group, sex and whether patient was admitted to ICU
 
 ```{r, cache=TRUE}
 
 #glimpse(covid_data)
-#Data cleaning
 
+#Data cleaning
 cleaning_covid_icu <- covid_data %>% 
   filter(icu_yn != "Missing") %>% 
   filter(icu_yn != "Unknown") %>%
@@ -123,7 +134,6 @@ cleaning_covid_icu <- covid_data %>%
 #glimpse(cleaning_covid_icu)
 
 #Adding the death percentage
-
 icu_covid <- cleaning_covid_icu %>% 
   group_by(age_group,sex,icu_yn,death_yn) %>% 
   count() %>% 
@@ -142,8 +152,24 @@ labels = c("Admitted to ICU", "No ICU"))
 #glimpse(icu_covid)
 
 #Graphical reflection
-ggplot(data = icu_covid, aes(x = age_group, y = death_percentage)) + geom_col(fill = "#fe9481", show.legend = FALSE) + geom_text(aes(label = round(death_percentage*100, 1), hjust = 0.6)) + labs(title = "Covid death % by age group, sex and whether patient was admitted to ICU", caption = "Source:CDC") + theme_bw() + theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + scale_y_continuous(labels = scales::percent) + coord_flip() + facet_grid(icu_yn_names ~ sex)
+ggplot(data = icu_covid, aes(x = age_group, y = death_percentage)) + geom_col(fill = "#fe9481", show.legend = FALSE) + 
+  geom_text(aes(label = round(death_percentage*100, 1), hjust = 0.6)) +
+#Add labels   
+  labs(title = "Covid death % by age group, sex and whether patient was admitted to ICU", caption = "Source:CDC") + 
+#Add theme and further features  
+  theme_bw() + 
+  theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + scale_y_continuous(labels = scales::percent) + 
+#Flip axis  
+  coord_flip() + 
+#Create separate graphs depending on sex and co-morbidities  
+  facet_grid(icu_yn_names ~ sex)
 ```
 
+Looking at the plotted graphs, it is possible to derive three interesting assumptions.
 
+* Not surprisingly, chances of death increase if people had to be admitted to ICU. This accounts for all age groups.
+
+* People aged 80+ are very likely (~80%) to die from covid-19 if admitted to ICU. 
+
+* Mortality rate for men is higher independent from ICU care. 
 
