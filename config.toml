@@ -44,8 +44,8 @@ disqusShortname = ""
     #logo = "London_Business_School_Logo.png"
 
     [[params.navigation.links]]
-      name = "Home"
-      url = "#"
+      #name = "Home"
+      #url = "#"
 
     [[params.navigation.links]]
       name = "Covid data"
@@ -76,13 +76,13 @@ disqusShortname = ""
         
     # Button Style 1
     [[params.navigation.button1]]
-      #name = "Get Started"
-      #url = "blogs"
+      name = "Home"
+      url = "#"
 
     # Button Style 2
     [[params.navigation.button2]]
-      #name = "Log In"
-      #url = "#"
+      name = "CV"
+      url = "blogs/CV Christoph Sieker.pdf"
 
 
   # Banner section
