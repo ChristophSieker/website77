@@ -89,10 +89,12 @@ president_approval_obama <- data_obama %>%
 
 #Calculating statistics
 net_approval_data <- president_approval_obama %>%
-  group_by(week_number = isoweek(end_date), year=year(end_date)) %>% 
+  group_by(week_number = isoweek(end_date), 
+           year=year(end_date)) %>% 
   summarise(mean_app = mean(net_approval, na.rm = TRUE), 
             sd_app = sd(net_approval, na.rm = TRUE), 
-            count_app = n(), se_app = sd_app / sqrt(count_app), 
+            count_app = n(), 
+            se_app = sd_app / sqrt(count_app), 
             t_critical = qt(0.975, count_app-1) , 
             margin_of_error = t_critical * se_app, 
             app_low = mean_app - margin_of_error, 
@@ -102,7 +104,8 @@ net_approval_data <- president_approval_obama %>%
   filter(year >= "2009" & year <= "2016" )
 
 #Plotting
-ggplot(net_approval_data, aes(x= week_number, y = mean_app, group=year, colour = factor(year)))+
+ggplot(net_approval_data, aes(x= week_number, y = mean_app, 
+  group=year, colour = factor(year)))+
 #Add points and lines reflecting mean net approval rate
   geom_point() +
   geom_line() +
@@ -117,7 +120,9 @@ ggplot(net_approval_data, aes(x= week_number, y = mean_app, group=year, colour =
   scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
   scale_y_continuous(breaks = seq(-30, 70, by = 25)) +
 #Add labels
-  labs(title="Estimating Net Approval (approve-disapprove) for Barack Obama",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)", caption = "Source:TheHuffingtonPost") +
+  labs(title="Estimating Net Approval (approve-disapprove) for Barack Obama",subtitle="Weekly average of all polls",
+       x="Week of the year",y="Average net approval (%)", 
+       caption = "Source:TheHuffingtonPost") +
 #Remove legend
   theme(legend.position = "none")
   
@@ -137,11 +142,19 @@ president_approval <- approval_polllist %>%
 net_approval_weekly <- president_approval %>%
   filter(subgroup == "Voters") %>%
   group_by(week_number = isoweek(enddate), year=year(enddate)) %>% 
-  summarise(mean_app = mean(net_approval, na.rm = TRUE), sd_app = sd(net_approval, na.rm = TRUE), count_app = n(), se_app = sd_app / sqrt(count_app), t_critical = qt(0.975, count_app-1) , margin_of_error = t_critical * se_app, app_low = mean_app - margin_of_error, app_high = mean_app + margin_of_error) %>%
+  summarise(mean_app = mean(net_approval, na.rm = TRUE), 
+            sd_app = sd(net_approval, na.rm = TRUE), 
+            count_app = n(), 
+            se_app = sd_app / sqrt(count_app), 
+            t_critical = qt(0.975, count_app-1) , 
+            margin_of_error = t_critical * se_app, 
+            app_low = mean_app - margin_of_error, 
+            app_high = mean_app + margin_of_error) %>%
   filter(count_app>1)
 
 #Plotting
-ggplot(net_approval_weekly, aes(x= week_number, y = mean_app, group=year, colour = factor(year)))+
+ggplot(net_approval_weekly, aes(x= week_number, y = mean_app, 
+  group=year, colour = factor(year)))+
 #Add points and lines reflecting mean net approval rate
   geom_point() +
   geom_line() +
@@ -157,7 +170,9 @@ ggplot(net_approval_weekly, aes(x= week_number, y = mean_app, group=year, colour
   scale_y_continuous(breaks = seq(-35, 15, by = 5)) +
 #Add labels
 labs(title="Estimating Net Approval (approve-disapprove) for Donald Trump
-",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)", caption = "Source:FiveThirtyEight") +
+",subtitle="Weekly average of all polls",
+x="Week of the year",y="Average net approval (%)", 
+caption = "Source:FiveThirtyEight") +
 #Remove legend
   theme(legend.position = "none")
 
