@@ -27,6 +27,7 @@ knitr::opts_chunk$set(
 )
 ```
 
+Before leading the UK into Brexit and eventually moving to Downing Street Boris Johnson was the major of London. Being a passionate cyclist he introduced the so-called Boris Bikes during his tenure. Overall, cockneys have used this service quite frequently. Especially during the summer, when usage reaches its peak, many people enjoy a quick cycle ride. For instance, after lockdown during this spring, extraordinary many people made use of this environmentally friendly means of transport. Don't hesitate to have a look at the monthly and weekly % changes in bike rentals below.
 
 ```{r load-libraries, include=FALSE}
 library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
@@ -39,20 +40,20 @@ library(janitor)
 library(httr)
 library(readxl)
 library(vroom)
+library(FreqProf)
 ```
 
 
-# Excess rentals in TfL bike sharing
 
 ```{r, get_tfl_data, cache=TRUE}
 
-# Use read_excel to read it as dataframe
+#Use read_excel to read it as dataframe
 bike0 <- read_excel("tfl.xlsx",
                    sheet = "Data",
                    range = cell_cols("A:B"))
 
 
-# change dates to get year, month, and week
+#Change dates to get year, month, and week
 bike <- bike0 %>% 
   clean_names() %>% 
   rename (bikes_hired = number_of_bicycle_hires) %>% 
@@ -62,37 +63,44 @@ bike <- bike0 %>%
 ```
 
 
-## Monthly changes in bike rentals
+# Monthly changes in bike rentals
+
 ```{r first_figure, fig.width = 10, fig.height=7}
 
-#calculate average bike hires in 2015-2019 by month (expected rentals)
+#Calculate average bike hires in 2015-2019 by month (expected rentals)
 expected_rentals <- bike %>%
   filter(year >=2015 & year <= 2019) %>%
   group_by(month) %>%
   summarize(avg_hires = sum(bikes_hired)/n())
 
-#calculate average bike hires by month including 2020 data (actual rentals)
+#Calculate average bike hires by month including 2020 data (actual rentals)
 actual_rentals <- bike %>%
   filter(year >= 2015) %>%
   group_by(year, month) %>%
   summarize(actual_hires = sum(bikes_hired)/n()) %>%
   inner_join(expected_rentals, by = "month")
 
-#plot the graph of change in monthly expected rentals vs actual rentals in 2015-2020
+#Plot the graph of change in monthly expected rentals vs actual rentals in 2015-2020
 ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
+#Show positive change from monthly average
   geom_ribbon(aes(ymin = actual_hires, ymax = pmin(actual_hires, avg_hires), group = year,
                   alpha = 0.5),
               show.legend = FALSE,
               fill = '#4CC076', color = "black", size=0.15) +
+#Show negative change from monthly average
   geom_ribbon(aes(ymin = avg_hires, ymax = pmin(actual_hires, avg_hires), group = year,
                   alpha = 0.5),
               show.legend = FALSE,
               fill = "#CD8383", color = "black", size=0.15) +
+#Show average usage with blue line
   geom_line(size = 0.5, color = "blue", aes(y = avg_hires, group = 1)) +
+#Add labels
   labs(title = "Monthly changes in TfL bike rentals",
        subtitle = "Change from monthly average shown in blue \n and calculated between 2015-2019",
        y = "Bike rentals",x=NULL) +
+#Show a graph for each year
   facet_wrap(~year) +
+#Adapt theme
   theme(strip.background = element_rect(fill="white", size = 0.5),
               strip.text = element_text(size=7),
               panel.background = element_rect(fill = "white"),
@@ -102,18 +110,17 @@ ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
 
 ```
 
-## Weekly changes in bike rentals
+# Weekly changes in bike rentals
+
 ```{r weekly_changes, fig.width=10, fig.height =8}
 
-library(FreqProf)
-
-#calculate average bike hires in 2015-2019 by week (expected rentals)
+#Calculate average bike hires in 2015-2019 by week (expected rentals)
 expected_rentals <- bike %>%
   filter(year >=2015 & year <= 2019) %>%
   group_by(week) %>%
   summarize(avg_hires = sum(bikes_hired)/n())
 
-#calculate average bike hires by week including 2020 data (actual rentals) and % change between expected and actual rentals
+#Calculate average bike hires by week including 2020 data (actual rentals) and % change between expected and actual rentals
 actual_rentals <- bike %>%
   filter(year >= 2015) %>%
   group_by(year, week) %>%
@@ -122,35 +129,43 @@ actual_rentals <- bike %>%
   summarize(week = week, per_change = (actual_hires-avg_hires)/avg_hires)
 
 
-#plot the graph of % change in weekly expected rentals vs actual rentals in 2015-2020
+#Plot the graph of % change in weekly expected rentals vs actual rentals in 2015-2020
 ggplot(actual_rentals, aes(x = week,y = per_change)) +
+#Add grey parts to the graphs for better visualization
    annotate("rect", fill = "#E0E0E0", alpha = 0.5, 
         xmin = 13, xmax = 26,
         ymin = -Inf, ymax = Inf)+  
   annotate("rect", fill = "#E0E0E0", alpha = 0.5, 
         xmin = 39, xmax = 53,
         ymin = -Inf, ymax = Inf)+
+#Add red in the case of negative % change from weekly averages  
    geom_ribbon(aes(ymin = pmin(0, per_change), ymax = 0, group = year,
                   alpha = 0.5),
               show.legend = FALSE,
               fill = "#CD8383", color = "grey") +
+ #Add green in the case of positive % change from weekly averages  
   geom_ribbon(aes(ymin = 0, ymax = pmax(0, per_change), group = year,
                   alpha = 0.5),
               show.legend = FALSE,
               fill = '#4CC076', color = "grey") +
+#Show changes from % weekly average
   geom_line(size = 0.2, color = "black", aes(y = per_change, group = 1)) +
+#Add labels
   labs(title = "Weekly changes in TfL bike rentals",
        subtitle = "% Changes from weekly averages \n calculated between 2015-2019",
        y = "Bike rentals") +
     scale_y_continuous(labels = scales::percent) +
      scale_x_continuous(breaks=c(13,26, 39, 53))+
+#Show a graph for each year
   facet_wrap(~year) +
+#Adapt theme
   theme(strip.background = element_rect(fill="white", size = 0.5),
               strip.text = element_text(size=8),
               panel.background = element_rect(fill = "white"),
               panel.grid = element_line(colour = "#f0f0f0"),
               plot.title = element_text(size = 8),
               axis.title.y = element_blank()) + theme(plot.title = element_text(size = 14))+
+#Add color to the x-axis depending on direction of % change 
   geom_rug(aes(colour=ifelse(per_change>=0,">=0","<0")),sides="b",alpha=0.5)+
     scale_colour_manual(values=c("#CD8383","#4CC076"), guide=FALSE)
   
