@@ -72,7 +72,7 @@ disqusShortname = ""
         
         [[params.navigation.links]]
         name = "Boris goes Bicycle"
-        url = "blogs/blog11"
+        url = "blogs/blogs11"
         
     # Button Style 1
     [[params.navigation.button1]]
