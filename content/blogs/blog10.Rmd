@@ -1,0 +1,162 @@
+---
+categories:
+- ""
+- ""
+date: "2020-10-19"
+description: TfL bike sharing
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog6
+title: Boris goes Bicycle
+---
+
+```{r, setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, include=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(lubridate)
+library(here)
+library(skimr)
+library(janitor)
+library(httr)
+library(readxl)
+library(vroom)
+```
+
+
+# Excess rentals in TfL bike sharing
+
+```{r, get_tfl_data, cache=TRUE}
+
+url <- "https://data.london.gov.uk/download/number-bicycle-hires/ac29363e-e0cb-47cc-a97a-e216d900a6b0/tfl-daily-cycle-hires.xlsx"
+
+# Download TFL data to temporary file
+httr::GET(url, write_disk(bike.temp <- tempfile(fileext = ".xlsx")))
+
+# Use read_excel to read it as dataframe
+bike0 <- read_excel(bike.temp,
+                   sheet = "Data",
+                   range = cell_cols("A:B"))
+
+# change dates to get year, month, and week
+bike <- bike0 %>% 
+  clean_names() %>% 
+  rename (bikes_hired = number_of_bicycle_hires) %>% 
+  mutate (year = year(day),
+          month = lubridate::month(day, label = TRUE),
+          week = isoweek(day))
+```
+
+
+## Monthly changes in bike rentals
+```{r first_figure, fig.width = 10, fig.height=7}
+
+#calculate average bike hires in 2015-2019 by month (expected rentals)
+expected_rentals <- bike %>%
+  filter(year >=2015 & year <= 2019) %>%
+  group_by(month) %>%
+  summarize(avg_hires = sum(bikes_hired)/n())
+
+#calculate average bike hires by month including 2020 data (actual rentals)
+actual_rentals <- bike %>%
+  filter(year >= 2015) %>%
+  group_by(year, month) %>%
+  summarize(actual_hires = sum(bikes_hired)/n()) %>%
+  inner_join(expected_rentals, by = "month")
+
+#plot the graph of change in monthly expected rentals vs actual rentals in 2015-2020
+ggplot(actual_rentals, aes(x = month, y = avg_hires)) +
+  geom_ribbon(aes(ymin = actual_hires, ymax = pmin(actual_hires, avg_hires), group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = '#4CC076', color = "black", size=0.15) +
+  geom_ribbon(aes(ymin = avg_hires, ymax = pmin(actual_hires, avg_hires), group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = "#CD8383", color = "black", size=0.15) +
+  geom_line(size = 0.5, color = "blue", aes(y = avg_hires, group = 1)) +
+  labs(title = "Monthly changes in TfL bike rentals",
+       subtitle = "Change from monthly average shown in blue \n and calculated between 2015-2019",
+       y = "Bike rentals",x=NULL) +
+  facet_wrap(~year) +
+  theme(strip.background = element_rect(fill="white", size = 0.5),
+              strip.text = element_text(size=7),
+              panel.background = element_rect(fill = "white"),
+              panel.grid = element_line(colour = "#f0f0f0"),
+              plot.title = element_text(size = 7),
+              axis.title.y = element_blank()) + theme(plot.title = element_text(size = 14)) 
+
+```
+
+## Weekly changes in bike rentals
+```{r weekly_changes, fig.width=10, fig.height =8}
+
+library(FreqProf)
+
+#calculate average bike hires in 2015-2019 by week (expected rentals)
+expected_rentals <- bike %>%
+  filter(year >=2015 & year <= 2019) %>%
+  group_by(week) %>%
+  summarize(avg_hires = sum(bikes_hired)/n())
+
+#calculate average bike hires by week including 2020 data (actual rentals) and % change between expected and actual rentals
+actual_rentals <- bike %>%
+  filter(year >= 2015) %>%
+  group_by(year, week) %>%
+  summarize(actual_hires = sum(bikes_hired)/n()) %>%
+  inner_join(expected_rentals, by = "week") %>%
+  summarize(week = week, per_change = (actual_hires-avg_hires)/avg_hires)
+
+
+#plot the graph of % change in weekly expected rentals vs actual rentals in 2015-2020
+ggplot(actual_rentals, aes(x = week,y = per_change)) +
+   annotate("rect", fill = "#E0E0E0", alpha = 0.5, 
+        xmin = 13, xmax = 26,
+        ymin = -Inf, ymax = Inf)+  
+  annotate("rect", fill = "#E0E0E0", alpha = 0.5, 
+        xmin = 39, xmax = 53,
+        ymin = -Inf, ymax = Inf)+
+   geom_ribbon(aes(ymin = pmin(0, per_change), ymax = 0, group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = "#CD8383", color = "grey") +
+  geom_ribbon(aes(ymin = 0, ymax = pmax(0, per_change), group = year,
+                  alpha = 0.5),
+              show.legend = FALSE,
+              fill = '#4CC076', color = "grey") +
+  geom_line(size = 0.2, color = "black", aes(y = per_change, group = 1)) +
+  labs(title = "Weekly changes in TfL bike rentals",
+       subtitle = "% Changes from weekly averages \n calculated between 2015-2019",
+       y = "Bike rentals") +
+    scale_y_continuous(labels = scales::percent) +
+     scale_x_continuous(breaks=c(13,26, 39, 53))+
+  facet_wrap(~year) +
+  theme(strip.background = element_rect(fill="white", size = 0.5),
+              strip.text = element_text(size=8),
+              panel.background = element_rect(fill = "white"),
+              panel.grid = element_line(colour = "#f0f0f0"),
+              plot.title = element_text(size = 8),
+              axis.title.y = element_blank()) + theme(plot.title = element_text(size = 14))+
+  geom_rug(aes(colour=ifelse(per_change>=0,">=0","<0")),sides="b",alpha=0.5)+
+    scale_colour_manual(values=c("#CD8383","#4CC076"), guide=FALSE)
+  
+```
+
