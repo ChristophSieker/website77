@@ -22,6 +22,7 @@ title: Airbnb Map Singapore
 <script src="/rmarkdown-libs/leaflet-binding/leaflet.js"></script>
 
 
+<p>Considering myself an adventurer, I am always curious to explore new places. To share my passion, I would like to support you in planning your next trip to Singapore. Please feel free to have a look at the map below in order to find your perfect Airbnb in Singapore.</p>
 <div id="data-tailoring" class="section level1">
 <h1>Data Tailoring</h1>
 <pre class="r"><code>listings &lt;- vroom(&quot;listings.csv.gz&quot;)
@@ -41,7 +42,7 @@ title: Airbnb Map Singapore
   #count(neighbourhood_group_cleansed,sort=TRUE)</code></pre>
 <div id="selecting-specific-variables-and-changing-data-types" class="section level2">
 <h2>Selecting specific variables and changing data types</h2>
-<pre class="r"><code># select relevant data columns
+<pre class="r"><code>#Select relevant data columns
 Singapore_data &lt;- listings %&gt;% 
   select(id, 
          listing_url,
@@ -85,10 +86,10 @@ Singapore_price_final &lt;- Singapore_data %&gt;%
 </div>
 <div id="mapping" class="section level1">
 <h1>Mapping</h1>
-<pre class="r"><code>#mapping
+<pre class="r"><code>#Mapping
 coloured_price &lt;- colorNumeric(palette = c(&quot;darkgreen&quot;, &quot;yellow&quot;, &quot;red3&quot;), Singapore_price_final$price)
 leaflet(Singapore_price_final) %&gt;%
-#control zoom function
+#Control zoom function
   addTiles(options = providerTileOptions(minZoom = 6)) %&gt;%
    setView(lng = mean(Singapore_price_final$longitude),
            lat = mean(Singapore_price_final$latitude), 
@@ -97,12 +98,14 @@ leaflet(Singapore_price_final) %&gt;%
                    lng = ~longitude,
                    lat = ~latitude,
                    radius = 1,
-#add color depending on price
+#Add color depending on price
                    color = ~coloured_price(price),
                    fillOpacity = 0.5,
                    popup = ~listing_url,
                    label =  ~property_type) %&gt;%
-  addLegend(&quot;bottomright&quot;, pal = coloured_price, values = ~price,
+#Add legend
+  addLegend(&quot;bottomright&quot;, pal = coloured_price, 
+            values = ~price,
     title = &quot;Price of Airbnb&quot;,
     labFormat = labelFormat(prefix = &quot;$&quot;),
     opacity = 1)</code></pre>
