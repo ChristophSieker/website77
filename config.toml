@@ -8,7 +8,7 @@ theme = "forty"
 googleAnalytics = "UA-180686344-1"
 
 # Enter your disqus shortname to enable comments
-disqusShortname = "https://sieker-portfolio.netlify.app/"
+disqusShortname = "Sieker_Feedback"
 
 [params]
   # You can use Markdown syntax for urls [text](//url.to/source)
