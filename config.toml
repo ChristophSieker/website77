@@ -124,7 +124,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Boris goes Bicycle"
       subtitle = "TfL bike sharing"
-      image = "pic06.jpg"
+      image = "Boris.jpg"
       url = "blogs/blog11"
     # You can make more showcases by copy and pasting the code above
 
