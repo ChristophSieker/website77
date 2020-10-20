@@ -102,7 +102,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Covid data"
       subtitle = "What influences the impact of covid on health?"
-      image = "Mask.jpg"
+      image = "Mask_v1.jpg"
       url = "blogs/blog5"
 
     [[params.tiles.showcase]]
@@ -114,25 +114,25 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "California Contributors - US Election 2016"
       subtitle = "Trump vs. Clinton"
-      image = "TrumpClinton.jpg"
+      image = "TrumpClinton_v1.jpg"
       url = "blogs/blog7"
 
     [[params.tiles.showcase]]
       title = "Wisdom of alcohol spreads across the globe"
       subtitle = "Different countries, different cultures, different drinking habits"
-      image = "Drinks.jpg"
+      image = "Drinks_v1.jpg"
       url = "blogs/blog9"
 
     [[params.tiles.showcase]]
       title = "Airbnb Map Singapore"
       subtitle = "Prices of Airbnb listings"
-      image = "SGP.jpg"
+      image = "SGP_v1.jpg"
       url = "blogs/blog8"
 
     [[params.tiles.showcase]]
       title = "Boris goes Bicycle"
       subtitle = "TfL bike sharing"
-      image = "Boris.jpg"
+      image = "Boris_v1.jpg"
       url = "blogs/blog11"
     # You can make more showcases by copy and pasting the code above
 
