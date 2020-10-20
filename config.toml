@@ -94,31 +94,31 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Covid data"
       subtitle = "What influences the impact of covid on health?"
-      image = "pic01.jpg"
+      image = "Mask.jpg"
       url = "blogs/blog5"
 
     [[params.tiles.showcase]]
       title = "US Presidential Approval Rates"
       subtitle = "Obama vs. Trump"
-      image = "pic02.jpg"
+      image = "TrumpObama.jpg"
       url = "blogs/blog6"
 
     [[params.tiles.showcase]]
       title = "California Contributors plots - US Election 2016"
       subtitle = "Trump vs. Clinton"
-      image = "pic03.jpg"
+      image = "TrumpClinton.jpg"
       url = "blogs/blog7"
 
     [[params.tiles.showcase]]
       title = "Wisdom of alcohol spreads across the globe"
       subtitle = "Different countries, different cultures, different drinking habits"
-      image = "pic04.jpg"
+      image = "Drinks.jpg"
       url = "blogs/blog9"
 
     [[params.tiles.showcase]]
       title = "Airbnb Map Singapore"
       subtitle = "Prices of Airbnb listings"
-      image = "pic05.jpg"
+      image = "SGP.jpg"
       url = "blogs/blog8"
 
     [[params.tiles.showcase]]
