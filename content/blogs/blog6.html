@@ -70,10 +70,10 @@ ggplot(net_approval_data, aes(x= week_number, y = mean_app, group=year, colour =
   facet_wrap(~year, nrow = 4) +
   theme_minimal()+
   scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
-  scale_y_continuous(breaks = seq(-30, 70, by = 20)) +
-  labs(title=&quot;Estimating Net Approval (approve-disapprove) for Barack Obama&quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average net approval (%)&quot;) +
+  scale_y_continuous(breaks = seq(-30, 70, by = 25)) +
+  labs(title=&quot;Estimating Net Approval (approve-disapprove) for Barack Obama&quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average net approval (%)&quot;, caption = &quot;Source:TheHuffingtonPost&quot;) +
   theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img src="/blogs/blog6_files/figure-html/unnamed-chunk-3-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/blog6_files/figure-html/unnamed-chunk-3-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="presidential-approval-rate---trump" class="section level1">
 <h1>Presidential approval rate - Trump</h1>
@@ -98,7 +98,7 @@ ggplot(net_approval_weekly, aes(x= week_number, y = mean_app, group=year, colour
   scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
   scale_y_continuous(breaks = seq(-35, 15, by = 5)) +
 labs(title=&quot;Estimating Net Approval (approve-disapprove) for Donald Trump
-&quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average net approval (%)&quot;) +
+&quot;,subtitle=&quot;Weekly average of all polls&quot;,x=&quot;Week of the year&quot;,y=&quot;Average net approval (%)&quot;, caption = &quot;Source:FiveThirtyEight&quot;) +
   theme(legend.position = &quot;none&quot;)</code></pre>
-<p><img src="/blogs/blog6_files/figure-html/unnamed-chunk-4-1.png" width="648" style="display: block; margin: auto;" /></p>
+<p><img src="/blogs/blog6_files/figure-html/unnamed-chunk-4-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>

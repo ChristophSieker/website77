@@ -81,7 +81,7 @@ approval_polllist$createddate<-mdy(approval_polllist$createddate)
 
 # Presidential approval rate - Obama
 
-```{r, cache=TRUE, fig.length=30}
+```{r, cache=TRUE, fig.width=10}
 #Adding net approval
 president_approval_obama <- data_obama %>%
   mutate(net_approval = Approve - Disapprove)
@@ -108,8 +108,8 @@ ggplot(net_approval_data, aes(x= week_number, y = mean_app, group=year, colour =
   facet_wrap(~year, nrow = 4) +
   theme_minimal()+
   scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
-  scale_y_continuous(breaks = seq(-30, 70, by = 20)) +
-  labs(title="Estimating Net Approval (approve-disapprove) for Barack Obama",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)") +
+  scale_y_continuous(breaks = seq(-30, 70, by = 25)) +
+  labs(title="Estimating Net Approval (approve-disapprove) for Barack Obama",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)", caption = "Source:TheHuffingtonPost") +
   theme(legend.position = "none")
   
 
@@ -119,7 +119,7 @@ ggplot(net_approval_data, aes(x= week_number, y = mean_app, group=year, colour =
 
 # Presidential approval rate - Trump
 
-```{r, cache=TRUE}
+```{r, cache=TRUE, fig.width=10}
 #Adding net approval
 president_approval <- approval_polllist %>%
   mutate(net_approval = adjusted_approve - adjusted_disapprove)
@@ -141,11 +141,10 @@ ggplot(net_approval_weekly, aes(x= week_number, y = mean_app, group=year, colour
   scale_x_continuous(breaks = seq(0, 52, by = 13))+ 
   scale_y_continuous(breaks = seq(-35, 15, by = 5)) +
 labs(title="Estimating Net Approval (approve-disapprove) for Donald Trump
-",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)") +
+",subtitle="Weekly average of all polls",x="Week of the year",y="Average net approval (%)", caption = "Source:FiveThirtyEight") +
   theme(legend.position = "none")
 
 
 ```
-
 
 

@@ -8,24 +8,17 @@ draft: false
 image: TrumpClinton_v1.jpg
 keywords: ""
 slug: blog7
-title: California Contributors plots - US Election 2016
+title: California Contributors - US Election 2016
 ---
 
 
 
-<pre class="r"><code>knitr::opts_chunk$set(
-  message = FALSE, 
-  warning = FALSE, 
-  tidy=FALSE,     # display code as typed
-  size=&quot;small&quot;)   # slightly smaller font for code
-options(digits = 3)
-
-# default figure size
-knitr::opts_chunk$set(
-  fig.width=6.75, 
-  fig.height=6.75,
-  fig.align = &quot;center&quot;
-)</code></pre>
+<p>Looking at the contributions to the presidential candidates Hillary Clinton and Donald Trump in California, three main derivations are possible:</p>
+<ul>
+<li><p>Hillary Clinton collected the most of her money in San Francisco, Los Angeles and Oakland.</p></li>
+<li><p>Donald Trump raised most of this money in Los Angeles, San Diego and Newport Beach.</p></li>
+<li><p>Overall Hillary Clinton was able to collect significantly more money than Donald Trump. Considering the fact that California is a very liberal, progressive and rather pro-democratic state, this is not a surprise.</p></li>
+</ul>
 <pre class="r"><code>CA_contributors_2016 &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;CA_contributors_2016.csv&quot;))
 zip_codes &lt;- vroom::vroom(here::here(&quot;data&quot;,&quot;zip_code_database.csv&quot;))
 
@@ -61,18 +54,23 @@ presidentials &lt;- donations_by_city %&gt;%
   slice_max(n=10, order_by = total_by_city) %&gt;%
   ungroup()  # mutate(cand_nm = as.factor(cand_nm), reorder_within(primary_city, total_by_city, cand_nm))
 
-
+#Plotting
 pres_plot &lt;- ggplot(presidentials, aes(x=reorder_within(primary_city, total_by_city, cand_nm), total_by_city, y = total_by_city)) +
-  geom_bar(stat=&#39;identity&#39;, aes(color = as.factor(cand_nm), fill = as.factor(cand_nm)), show.legend = FALSE) +
+  geom_bar(stat=&#39;identity&#39;, aes(color = as.factor(cand_nm),
+  fill = as.factor(cand_nm)), show.legend = FALSE) +
+#Flip axis
   coord_flip() +
+#Add labels
   labs(title = &quot;Where did candidates raise the most money?&quot;, y = &quot;Amount raised&quot;) +
+#Adapt scale
   scale_y_continuous(labels = scales::dollar) +
   scale_x_reordered() +
+#Adapt color
   scale_fill_manual(values = c(&quot;#2e74c0&quot;, &quot;#cb454a&quot;)) +
   scale_color_manual(values = c(&quot;#bcd3eb&quot;, &quot;#eab2b4&quot;)) +
-  ggtitle(&quot;Where did candidates raise the most money?&quot;) +
-  theme(plot.title = element_text(size = 30, face = &quot;bold&quot;)) +
+#Show graphs for each candidate
   facet_wrap(~cand_nm, scales = &quot;free&quot;) +
+#Adapt layout and theme
   theme(strip.background = element_rect(fill=&quot;lightGrey&quot;, color = &quot;black&quot;, size = 0.5),
               strip.text = element_text(size=8),
               panel.border = element_rect(colour = &quot;black&quot;, size=0.5, fill = NA, linetype = &quot;solid&quot;),
