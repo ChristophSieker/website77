@@ -68,11 +68,11 @@ disqusShortname = ""
 
       [[params.navigation.links]]
         name = "Airbnb Map Singapore"
-        url = "bblogs/blog8"
+        url = "blogs/blog8"
         
         [[params.navigation.links]]
         name = "Boris goes Bicycle"
-        url = "bblogs/blog11"
+        url = "blogs/blog11"
         
     # Button Style 1
     [[params.navigation.button1]]
