@@ -108,7 +108,7 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "US Presidential Approval Rates"
       subtitle = "Obama vs. Trump"
-      image = "TrumpObama.jpg"
+      image = "TrumpObama_v1.jpg"
       url = "blogs/blog6"
 
     [[params.tiles.showcase]]

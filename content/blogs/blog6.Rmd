@@ -5,7 +5,7 @@ categories:
 date: "2020-10-19"
 description: Obama vs. Trump
 draft: false
-image: TrumpObama.jpg
+image: TrumpObama_v1.jpg
 keywords: ""
 slug: blog6
 title: US Presidential Approval Rates

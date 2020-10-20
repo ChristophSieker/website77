@@ -5,7 +5,7 @@ categories:
 date: "2020-10-19"
 description: Trump vs. Clinton
 draft: false
-image: TrumpClinton.jpg
+image: TrumpClinton_v1.jpg
 keywords: ""
 slug: blog7
 title: California Contributors plots - US Election 2016
