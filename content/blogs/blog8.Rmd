@@ -1,0 +1,160 @@
+---
+categories:
+- ""
+- ""
+date: "2020-10-19"
+description: Prices of Airbnb listings
+draft: false
+image: pic07.jpg
+keywords: ""
+slug: blog8
+title: Airbnb Map Singapore
+---
+
+```{r, setup, echo=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE, 
+  warning = FALSE, 
+  tidy=FALSE,     # display code as typed
+  size="small")   # slightly smaller font for code
+options(digits = 3)
+
+# default figure size
+knitr::opts_chunk$set(
+  fig.width=6.75, 
+  fig.height=6.75,
+  fig.align = "center"
+)
+```
+
+
+```{r load-libraries, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(mosaic)
+library(ggthemes)
+library(GGally)
+library(readxl)
+library(here)
+library(skimr)
+library(janitor)
+library(broom)
+library(tidyquant)
+library(infer)
+library(openintro)
+library(tidyquant)
+library(reshape2)
+library(leaflet)
+library(ggfortify)
+library(vroom)
+```
+
+
+# Data Tailoring
+
+```{r, data}
+listings <- vroom("listings.csv.gz")
+
+#listings %>%
+  #glimpse()
+
+#listings %>%
+  #skim()
+
+
+#listings %>%
+  #count(neighbourhood,sort=TRUE) %>%
+  #filter(n>100)
+
+#listings %>%
+  #count(neighbourhood_group_cleansed,sort=TRUE)
+
+```
+
+
+## Selecting specific variables and changing data types
+
+```{r, variable_correlations}
+
+# select relevant data columns
+Singapore_data <- listings %>% 
+  select(id, 
+         listing_url,
+         zipcode,
+         latitude,
+         longitude,
+         is_location_exact,
+         price,
+         security_deposit,
+         cleaning_fee,
+         guests_included,
+         extra_people,
+         minimum_nights,
+         maximum_nights,
+         accommodates,
+         property_type
+         )
+
+#Change data type of numerical variables
+Singapore_data <- Singapore_data %>%
+  mutate(price = parse_number(price),
+         extra_people = parse_number(extra_people),
+         cleaning_fee = parse_number(cleaning_fee),
+         security_deposit = parse_number(security_deposit)
+         )
+
+
+
+```
+
+
+## Handling missing values
+
+```{r, handling_missing_values}
+
+Singapore_data$cleaning_fee[is.na(Singapore_data$cleaning_fee)] <- 0
+Singapore_data$security_deposit[is.na(Singapore_data$security_deposit)] <- 0
+
+
+```
+
+
+## Filter to receive a more meaningful data set
+
+```{r, new_price_variables}
+
+#Filtering criteria in order to be aligned with the below definition of new variables
+Singapore_price_final <- Singapore_data %>%
+  filter(minimum_nights <= 4,
+         accommodates >= 2,
+         price != 0,
+         price < 3000) 
+```
+
+
+# Mapping
+
+```{r, mapping}
+
+#mapping
+coloured_price <- colorNumeric(palette = c("darkgreen", "yellow", "red3"), Singapore_price_final$price)
+leaflet(Singapore_price_final) %>%
+#control zoom function
+  addTiles(options = providerTileOptions(minZoom = 6)) %>%
+   setView(lng = mean(Singapore_price_final$longitude),
+           lat = mean(Singapore_price_final$latitude), 
+           zoom = 6) %>%
+  addCircleMarkers(
+                   lng = ~longitude,
+                   lat = ~latitude,
+                   radius = 1,
+#add color depending on price
+                   color = ~coloured_price(price),
+                   fillOpacity = 0.5,
+                   popup = ~listing_url,
+                   label =  ~property_type) %>%
+  addLegend("bottomright", pal = coloured_price, values = ~price,
+    title = "Price of Airbnb",
+    labFormat = labelFormat(prefix = "$"),
+    opacity = 1)
+```
+

@@ -116,10 +116,10 @@ disqusShortname = ""
       url = "blogs/blog9"
 
     [[params.tiles.showcase]]
-      title = "xxx"
-      subtitle = "xxx"
+      title = "Airbnb Map Singapore"
+      subtitle = "Prices of Airbnb listings"
       image = "pic05.jpg"
-      url = "blogs/ipsum"
+      url = "blogs/blog8"
 
     [[params.tiles.showcase]]
       title = "Etiam"
