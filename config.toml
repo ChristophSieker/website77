@@ -52,7 +52,7 @@ disqusShortname = "Siekerportfolio"
       url = "blogs/blog5"
 
     [[params.navigation.links]]
-      name = "US Presidential Approval Rates"
+      name = "US Approval Rates"
       url = "blogs/blog6"
 
     [[params.navigation.links]]
@@ -63,7 +63,7 @@ disqusShortname = "Siekerportfolio"
     # the [[params.navigation.links]] map associated with that link. Copy and paste
     # code below if you need more links. Buttons work in the same way.
      [[params.navigation.links]]
-        name = "Wisdom of alcohol spreads across the globe"
+        name = "Wisdom of alcohol"
         url = "blogs/blog9"
 
       [[params.navigation.links]]
