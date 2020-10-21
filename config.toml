@@ -91,7 +91,7 @@ disqusShortname = "Siekerportfolio"
     # the 'static/img' folder.
     title = "Hi, my name is Christoph"
     subtitle = "This is my portfolio website"
-    buttonText = "Get Started"
+    buttonText = "Recent projects"
 
 
   # Tiles Section
