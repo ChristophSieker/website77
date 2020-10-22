@@ -72,7 +72,7 @@ disqusShortname = "Siekerportfolio"
         
         [[params.navigation.links]]
         name = "Boris goes Bicycle"
-        url = "blogs/blog11"
+        url = "blogs/blog10"
         
     # Button Style 1
     [[params.navigation.button1]]
@@ -133,7 +133,7 @@ disqusShortname = "Siekerportfolio"
       title = "Boris goes Bicycle"
       subtitle = "TfL bike sharing"
       image = "Boris_v1.jpg"
-      url = "blogs/blog11"
+      url = "blogs/blog10"
     # You can make more showcases by copy and pasting the code above
 
   [params.blog]

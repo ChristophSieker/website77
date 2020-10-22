@@ -20,7 +20,7 @@ title: US Presidential Approval Rates
 </ul>
 <div id="download-obama-data" class="section level1">
 <h1>Download Obama data</h1>
-<pre class="r"><code>data_obama &lt;- vroom(&quot;00c -Pres-44-Obama - Job Approval - National-poll-responses-clean.tsv&quot;)
+<pre class="r"><code>data_obama &lt;- vroom(here::here(&quot;data&quot;,&quot;00c -Pres-44-Obama - Job Approval - National-poll-responses-clean.tsv&quot;))
 
 #glimpse(data_obama)
 
@@ -29,7 +29,7 @@ title: US Presidential Approval Rates
 <div id="download-trump-data" class="section level1">
 <h1>Download Trump data</h1>
 <pre class="r"><code># Import approval polls data
-approval_polllist &lt;- read_csv(&#39;approval_polllist.csv&#39;)
+approval_polllist &lt;- read_csv(here::here(&quot;data&quot;,&quot;approval_polllist.csv&quot;))
 
 #glimpse(approval_polllist)
 

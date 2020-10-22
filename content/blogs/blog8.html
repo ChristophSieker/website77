@@ -26,7 +26,7 @@ title: Airbnb Map Singapore
 <p>*In contrast to the later mentioned total price the $100 do not include potential cleaning price and charge for extra people.</p>
 <div id="data-tailoring" class="section level1">
 <h1>Data Tailoring</h1>
-<pre class="r"><code>listings &lt;- vroom(&quot;listings.csv.gz&quot;)
+<pre class="r"><code>listings &lt;- vroom(here::here(&quot;data&quot;,&quot;listings.csv.gz&quot;))
 
 #listings %&gt;%
   #glimpse()

@@ -51,7 +51,7 @@ A comparison of approval rates of the Obama and Trump shows the following:
 
 ```{r, cache=TRUE}
 
-data_obama <- vroom("00c -Pres-44-Obama - Job Approval - National-poll-responses-clean.tsv")
+data_obama <- vroom(here::here("data","00c -Pres-44-Obama - Job Approval - National-poll-responses-clean.tsv"))
 
 #glimpse(data_obama)
 
@@ -63,7 +63,7 @@ data_obama <- vroom("00c -Pres-44-Obama - Job Approval - National-poll-responses
 
 ```{r, cache=TRUE}
 # Import approval polls data
-approval_polllist <- read_csv('approval_polllist.csv')
+approval_polllist <- read_csv(here::here("data","approval_polllist.csv"))
 
 #glimpse(approval_polllist)
 

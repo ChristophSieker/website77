@@ -57,7 +57,8 @@ Considering myself an adventurer, I am always curious to explore new places. To 
 # Data Tailoring
 
 ```{r, data}
-listings <- vroom("listings.csv.gz")
+
+listings <- vroom(here::here("data","listings.csv.gz"))
 
 #listings %>%
   #glimpse()
